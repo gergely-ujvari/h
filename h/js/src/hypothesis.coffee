@@ -63,6 +63,8 @@ class Hypothesis extends Annotator
         onEditorSubmit: {}
         showFrame: {}
         hideFrame: {}
+        setFrameDragStart: {}
+        setFrameDragEnd: {}
         resetFrameWidth: {}
         setFrameWidth: {}
         addtoFrameWidth: {}
@@ -130,11 +132,13 @@ class Hypothesis extends Annotator
         this.show()
     document.getElementsByClassName('tri')[0].addEventListener 'dragstart', (event) =>
       @dragstartposX = event.screenX
+      @provider.setFrameDragStart()
     document.getElementById('toolbar').addEventListener 'dragend', (event) =>
-      @provider.addtoFrameWidth(@dragstartposX - event.screenX, window.innerWidth)
+      @provider.addtoFrameWidth(@dragstartposX - event.screenX, window.innerWidth, true)
+      setTimeout(@provider.setFrameDragEnd(),250)
     document.getElementById('toolbar').addEventListener 'drag', (event) =>
       if event.screenX > 0
-        @provider.addtoFrameWidth((@dragstartposX - event.screenX), window.innerWidth)
+        @provider.addtoFrameWidth((@dragstartposX - event.screenX), window.innerWidth, true)
         @dragstartposX = event.screenX
     this
 

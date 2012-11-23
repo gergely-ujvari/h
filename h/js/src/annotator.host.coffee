@@ -65,13 +65,13 @@ class Annotator.Host extends Annotator
         onEditorSubmit: this.onEditorSubmit
         showFrame: => @frame.removeClass('annotator-collapsed')
         hideFrame: => @frame.addClass('annotator-collapsed')
-        resetFrameWidth: =>
-          @frame.css({ "width": "", "margin-left" : "" })        
-        setFrameWidth: (width) =>
-          @frame.css({ "width": width, "margin-left" : (-1)*width })
-        addtoFrameWidth: (width, innerWidth) =>
+        setFrameDragStart: => @frame.css({ "right" : "0%" , "left": "auto" })                  
+        setFrameDragEnd: => @frame.css({ "left" : "100%", "right" : "auto" })                  
+        resetFrameWidth: => @frame.css({ "width": "", "margin-left" : "" })        
+        setFrameWidth: (width) => @frame.css({ "width": width, "margin-left" : (-1)*width })
+        addtoFrameWidth: (width, innerWidth, end = false) =>
           if isNaN(parseInt(@frame[0].style.width)) then old = innerWidth else old = parseInt(@frame[0].style.width)
-          @frame.css({ "width": (old + width), "margin-left" : (-1)*(old + width) })   
+          if not end then @frame.css({ "width": (old + width) }) else @frame.css({ "width": (old + width), "margin-left" : (-1)*(old + width) })   
         getHighlights: =>
           highlights: $(@wrapper).find('.annotator-hl').map ->
             offset: $(this).offset()

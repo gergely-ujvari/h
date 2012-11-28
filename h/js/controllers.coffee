@@ -598,7 +598,7 @@ class Hypothesis extends Annotator
   showEditor: (annotation) =>
     if not annotation.user?
       @plugins.Permissions.addFieldsToAnnotation(annotation)
-
+      
     @viewer.hide()
     @editor.load(annotation)
     @editor.element.find('.annotator-controls').remove()
@@ -618,9 +618,11 @@ class Hypothesis extends Annotator
     @unsaved_drafts.push @editor
 
     d3.select(@viewer.element[0]).datum(null)
-    this.show()
+    @provider.setActiveHighlights []
+    this.show(false)
 
-  show: =>
+  show: (doHighlight = true) =>
+    console.log(doHighlight)
     if @detail
       annotations = d3.select(@viewer.element[0]).datum().children.map (c) =>
         c.message.annotation.hash.valueOf()
@@ -628,7 +630,7 @@ class Hypothesis extends Annotator
       annotations = @heatmap.buckets[@bucket]?.map (a) => a.hash.valueOf()
 
     @visible = true
-    @provider.setActiveHighlights annotations
+    if doHighlight == true then @provider.setActiveHighlights annotations
     @provider.showFrame()
     @element.find('#toolbar').addClass('shown')
       .find('.tri').attr('draggable', true)

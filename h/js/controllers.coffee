@@ -619,18 +619,18 @@ class Hypothesis extends Annotator
 
     d3.select(@viewer.element[0]).datum(null)
     @provider.setActiveHighlights []
-    this.show(false)
+    this.show()
 
-  show: (doHighlight=true) =>
-    console.log(doHighlight)
+  highlight: =>
     if @detail
       annotations = d3.select(@viewer.element[0]).datum().children.map (c) =>
         c.message.annotation.hash.valueOf()
     else
       annotations = @heatmap.buckets[@bucket]?.map (a) => a.hash.valueOf()
+    @provider.setActiveHighlights annotations
 
+  show: =>
     @visible = true
-    if (doHighlight) then @provider.setActiveHighlights annotations
     @provider.showFrame()
     @element.find('#toolbar').addClass('shown')
       .find('.tri').attr('draggable', true)

@@ -27,6 +27,8 @@ class Annotator.Host extends Annotator
     delta: 0
     last: null
     tick: false
+  #Do we enable dragging    
+  canDrag: false
 
   constructor: (element, options) ->
     super
@@ -135,6 +137,8 @@ class Annotator.Host extends Annotator
           Math.max.apply(Math, all)
         scrollTop: (y) =>
           $('html, body').stop().animate {scrollTop: y}, 600
+        setDrag: (drag) =>
+           @canDrag = drag
       remote:
         publish: {}
         addPlugin: {}
@@ -186,6 +190,8 @@ class Annotator.Host extends Annotator
         display: 'none'
       do update
     document.addEventListener 'dragover', (event) =>
+      unless @canDrag
+      	return
       if @drag.last?
         @drag.delta += event.screenX - @drag.last
       @drag.last = event.screenX
@@ -193,6 +199,8 @@ class Annotator.Host extends Annotator
         @drag.tick = true
         window.requestAnimationFrame this.dragRefresh
     document.addEventListener 'dragleave', (event) =>
+      unless @canDrag
+      	return
       if @drag.last?
         @drag.delta += event.screenX - @drag.last
       @drag.last = event.screenX

@@ -14,6 +14,7 @@ class Hypothesis extends Annotator
   detail: false      # * Whether the viewer shows a summary or detail listing
   visible: false     # * Whether the sidebar is visible
   unsaved_drafts: [] # * Unsaved drafts currenty open
+  dragging: false    # * To enable dragging only when we really want to
 
   this.$inject = [
     '$document', '$location', '$rootScope',
@@ -220,6 +221,7 @@ class Hypothesis extends Annotator
         getHref: {}
         getMaxBottom: {}
         scrollTop: {}
+        setDrag: {}
 
   _setupWrapper: ->
     @wrapper = @element.find('#wrapper')
@@ -257,13 +259,19 @@ class Hypothesis extends Annotator
     handle.addEventListener 'dragstart', (event) =>
       event.dataTransfer.setData 'text/plain', ''
       event.dataTransfer.setDragImage el, 0, 0
+      @dragging = true
+      @provider.setDrag true
       @provider.dragFrame event.screenX
     handle.addEventListener 'dragend', (event) =>
       @provider.dragFrame event.screenX
+      @dragging = false
+      @provider.setDrag false
     @element[0].addEventListener 'dragover', (event) =>
-      @provider.dragFrame event.screenX
+      if @dragging
+        @provider.dragFrame event.screenX
     @element[0].addEventListener 'dragleave', (event) =>
-      @provider.dragFrame event.screenX
+      if @dragging
+        @provider.dragFrame event.screenX
 
     this
 

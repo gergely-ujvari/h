@@ -45,10 +45,16 @@ class Hypothesis extends Annotator
 
     # Update threads when annotations are deleted
     this.subscribe 'annotationDeleted', (annotation) =>
-      $rootScope.$apply ->
+      fn = ->
         thread = threading.getContainer annotation.id
         thread.message = null
         if thread.parent then threading.pruneEmpties thread.parent
+             	
+       phase = $rootScope.$root.$$phase
+       if phase == '$apply' or phase == '$digest'
+         if fn then fn()
+       else
+         $rootScope.$apply(fn)	  
 
     # Thread the annotations after loading
     this.subscribe 'annotationsLoaded', (annotations) =>

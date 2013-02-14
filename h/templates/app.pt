@@ -9,6 +9,7 @@
     <div id="toolbar" class="form-inline">
       <div data-ng-click="toggleShow()" class="tri"></div>
 
+
       <!-- Persona -->
       <div data-ng-show="sheet.collapsed"
            class="tinyman">
@@ -169,6 +170,31 @@
         </form>
         <!-- / Activate -->
 
+		<!-- Change Annotator store -->
+        <form data-title="Change Annotator Store"
+              data-value="change_store"
+              class="tab-pane"
+              name="change_store"
+              novalidate>
+		  <input type="text" name="newStore"
+		         required autocorrect="false" autocapitalize="false"
+		         data-ng-model="newStore"/>
+		  Store uri
+		  <input type="text" name="newLimit"
+		         required autocorrect="false" autocapitalize="false"
+		         data-ng-model="newLimit" />
+		  Search limit
+		  <input type="text" name="newPrefix"
+		         required autocorrect="false" autocapitalize="false"
+		         data-ng-model="newPrefix" />
+		  Prefix
+		<!-- <button data-ng-click="changeStore()">Change store</button> -->
+        <input type="submit" data-ng-click="changeStore()" name="change_store" value="Change store" />
+		
+		</form>	
+		<!-- / Change Annotator store -->
+
+
         <footer data-ng-show="sheet.tab == 'login' || sheet.tab == 'register'">
           <ul>
             <li>
@@ -186,13 +212,11 @@
     </div>
     <!-- / Toolbar -->
 
-
     <!-- Content -->
     <div id="wrapper">
       <div data-ng-view=""></div>
     </div>
     <!-- / Content -->
-
 
     <!-- Templates -->
     <script type="text/ng-template" id="annotation.html">

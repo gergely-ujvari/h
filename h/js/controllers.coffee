@@ -109,7 +109,7 @@ class App
           'Content-Type': 'application/x-www-form-urlencoded'
         withCredentials: true
       .success (data) =>
-        if data.model? then angular.extend $scope, data.model
+        if data.model? then angular.extend($scope, data.model)
         if data.flash? then flash q, msgs for q, msgs of data.flash
         if data.status is 'failure' then flash 'error', data.reason
 
@@ -157,6 +157,13 @@ class App
       else
         plugins.HypothesisPermissions.setUser(null)
         delete plugins.Auth
+      provider.setActiveHighlights []
+      if annotator.plugins.Store?
+        for annotation in annotator.dumpAnnotations()
+          provider.deleteAnnotation annotation
+        annotator.plugins.Store.loadAnnotations()            
+        heatmap.publish 'updated'
+        provider.publish 'hostUpdated'
 
     $scope.$on 'showAuth', (event, show=true) ->
       angular.extend $scope.sheet,
@@ -182,6 +189,52 @@ class App
         $i.triggerHandler('input')
     , 200  # We hope this is long enough
 
+    $scope.$watch 'sheet.tab', (newValue, oldValue) =>
+      if newValue = 'change_store' and annotator.plugins.Store?      		
+        $scope.newStore = annotator.plugins.Store.options.annotationData.uri
+        $scope.newLimit = annotator.plugins.Store.options.loadFromSearch.limit
+        $scope.newPrefix = annotator.plugins.Store.options.prefix
+
+    $scope.changeStore = ->
+        console.log('change_store started')
+        console.log('New url is: ' + $scope.newStore )
+        document.annstore = annotator.plugins.Store
+        
+        #Removing old-store annotations
+        provider.setActiveHighlights []
+        if annotator.plugins.Store?
+          for annotation in annotator.dumpAnnotations()
+            console.log(annotation)
+            console.log(annotation.id)
+            provider.deleteAnnotation annotation
+            # Remove the old annotation from the threading
+            thread = (threading.getContainer annotation.id)
+            if thread.parent
+              thread.message = null
+              threading.pruneEmpties thread.parent
+            else
+              delete threading.idTable[annotation.id]
+
+          heatmap.publish 'updated'
+          provider.publish 'hostUpdated'
+          delete annotator.plugins['Store']   	
+          annotator.addPlugin 'Store',
+            annotationData:
+              uri: $scope.newStore
+            loadFromSearch:
+              limit: $scope.newLimit
+              uri: $scope.newStore
+            prefix: $scope.newStore + $scope.newPrefix
+            
+          #annotator.plugins.Store.options.annotationData.uri = $scope.newStore
+          #annotator.plugins.Store.options.loadFromSearch.limit = $scope.newLimit
+          #annotator.plugins.Store.options.loadFromSearch.uri = $scope.newStore
+          #annotator.plugins.Store.options.prefix = $scope.newPrefix
+          #annotator.plugins.Store.loadAnnotations()
+          annotator.plugins.Store.loadAnnotationsFromSearch(annotator.plugins.Store.options.loadFromSearch)
+          heatmap.publish 'updated'
+          provider.publish 'hostUpdated'   	
+        console.log('change_store ended')
 
 class Annotation
   this.$inject = [
@@ -197,6 +250,12 @@ class Annotation
       # Annotator event callbacks don't expect a digest to be active
       $timeout (-> annotator.publish args...), 0, false
 
+    $scope.privacyLevels = [
+     {name: 'Public', value:  { 'read': 'group:__world__' } },
+     {name: 'Private', value: { 'read': [] } }
+    ]
+    $scope.privacy = $scope.privacyLevels[0]
+    
     $scope.cancel = ->
       $scope.editing = false
       drafts.remove $scope.$modelValue
@@ -240,10 +299,14 @@ class Annotation
     $scope.$watch 'editing', (newValue) ->
       if newValue then $timeout -> $element.find('textarea').focus()
 
+    $scope.choose_privacy = (p) ->
+      $scope.privacy = p
+       	
     # Check if this is a brand new annotation
     if drafts.contains $scope.$modelValue
       $scope.editing = true
       $scope.unsaved = true
+      $scope.$modelValue.permissions = { 'read': 'group:__world__' } 
 
 
 class Editor
@@ -316,7 +379,7 @@ class Viewer
       if $routeParams.id?
         highlights = [$routeParams.id]
       else if angular.isArray annotation
-        highlights = (a.id for a in annotation)
+        highlights = (a.id for a in annotation when a?)
       else if angular.isObject annotation
         highlights = [annotation.id]
       else

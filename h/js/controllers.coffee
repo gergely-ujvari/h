@@ -110,7 +110,7 @@ class App
       document.test = annotator
 
       posturl = ''
-      if annotator.plugins.Store? then posturl = annotator.plugins.Store.options.annotationData.uri + 'app/'
+      if annotator.plugins.Store? then posturl = (url_concat annotator.plugins.Store.options.annotationData.uri, 'app/')
       console.log(posturl)
       #$http.post '', data,
       $http.post posturl, data,
@@ -197,6 +197,13 @@ class App
         $i.triggerHandler('change')
         $i.triggerHandler('input')
     , 200  # We hope this is long enough
+    
+    url_concat = (part1, part2) ->
+      ends = part1[part1.length-1] == '/'
+      starts = part2[0] == '/'
+      if ends and starts then return part1 + part2.slice(1, part2.length)
+      if ends or starts then return part1 + part2    	
+      part1 + '/' + part2
 
     $scope.$watch 'sheet.tab', (newValue, oldValue) =>
       if newValue = 'change_store' and annotator.plugins.Store?      		
@@ -233,7 +240,7 @@ class App
             loadFromSearch:
               limit: $scope.newLimit
               uri: $scope.newStore
-            prefix: $scope.newStore + $scope.newPrefix
+            prefix: (url_concat $scope.newStore, $scope.newPrefix)
             
           #annotator.plugins.Store.options.annotationData.uri = $scope.newStore
           #annotator.plugins.Store.options.loadFromSearch.limit = $scope.newLimit

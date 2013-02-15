@@ -98,13 +98,22 @@ class App
             annotator.show()
 
     $scope.submit = (form) ->
+      console.log('scope submit')
       return unless form.$valid
       params = for name, control of form when control.$modelValue?
         [name, control.$modelValue]
+      
+      console.log(params)
       params.push ['__formid__', form.$name]
       data = (((p.map encodeURIComponent).join '=') for p in params).join '&'
+      console.log(data)
+      document.test = annotator
 
-      $http.post '', data,
+      posturl = ''
+      if annotator.plugins.Store? then posturl = annotator.plugins.Store.options.annotationData.uri + 'app/'
+      console.log(posturl)
+      #$http.post '', data,
+      $http.post posturl, data,
         headers:
           'Content-Type': 'application/x-www-form-urlencoded'
         withCredentials: true

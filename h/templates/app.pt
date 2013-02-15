@@ -178,18 +178,25 @@
               novalidate>
 		  <input type="text" name="newStore"
 		         required autocorrect="false" autocapitalize="false"
-		         data-ng-model="newStore"/>
-		  Store uri
+		         data-ng-model="newStore"
+		         data-ng-pattern="/^https?:///" />
+          Store uri
+          <span data-ng-show="change_store.newStore.$error.pattern"
+                > must be http(s)!</span>
 		  <input type="text" name="newLimit"
 		         required autocorrect="false" autocapitalize="false"
-		         data-ng-model="newLimit" />
+		         data-ng-model="newLimit" 
+		         data-ng-pattern="/^[0-9]+$/"
+		         data-ng-minlength="1"/>
 		  Search limit
-		  <input type="text" name="newPrefix"
-		         required autocorrect="false" autocapitalize="false"
-		         data-ng-model="newPrefix" />
-		  Prefix
-		<!-- <button data-ng-click="changeStore()">Change store</button> -->
-        <input type="submit" data-ng-click="changeStore()" name="change_store" value="Change store" />
+          <span data-ng-show="change_store.newLimit.$error.pattern"
+                > must be a positive integer!</span>
+          <span data-ng-show="change_store.newLimit.$error.minlength"
+                > must be a positive integer!</span>
+		  
+		<!--<button data-ng-click="changeStore()">Change store</button> -->
+        <input type="submit" data-ng-click="changeStore()" name="change_store" value="Change store"
+               data-ng-disabled="!change_store.$valid"/> 
 		
 		</form>	
 		<!-- / Change Annotator store -->

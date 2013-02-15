@@ -107,13 +107,13 @@ class App
       params.push ['__formid__', form.$name]
       data = (((p.map encodeURIComponent).join '=') for p in params).join '&'
       console.log(data)
-      document.test = annotator
+      #document.test = annotator
 
-      posturl = ''
-      if annotator.plugins.Store? then posturl = (url_concat annotator.plugins.Store.options.annotationData.uri, 'app/')
-      console.log(posturl)
-      #$http.post '', data,
-      $http.post posturl, data,
+      #posturl = ''
+      #if annotator.plugins.Store? then posturl = (url_concat annotator.plugins.Store.options.annotationData.uri, 'app/')
+      #console.log(posturl)
+      $http.post '', data,
+      #$http.post posturl, data,
         headers:
           'Content-Type': 'application/x-www-form-urlencoded'
         withCredentials: true
@@ -166,13 +166,6 @@ class App
       else
         plugins.HypothesisPermissions.setUser(null)
         delete plugins.Auth
-      provider.setActiveHighlights []
-      if annotator.plugins.Store?
-        for annotation in annotator.dumpAnnotations()
-          provider.deleteAnnotation annotation
-        annotator.plugins.Store.loadAnnotations()            
-        heatmap.publish 'updated'
-        provider.publish 'hostUpdated'
 
     $scope.$on 'showAuth', (event, show=true) ->
       angular.extend $scope.sheet,
@@ -209,7 +202,6 @@ class App
       if newValue = 'change_store' and annotator.plugins.Store?      		
         $scope.newStore = annotator.plugins.Store.options.annotationData.uri
         $scope.newLimit = annotator.plugins.Store.options.loadFromSearch.limit
-        $scope.newPrefix = annotator.plugins.Store.options.prefix
 
     $scope.changeStore = ->
         console.log('change_store started')
@@ -240,16 +232,13 @@ class App
             loadFromSearch:
               limit: $scope.newLimit
               uri: $scope.newStore
-            prefix: (url_concat $scope.newStore, $scope.newPrefix)
+            prefix: (url_concat $scope.newStore, '/api/current')
             
           #annotator.plugins.Store.options.annotationData.uri = $scope.newStore
           #annotator.plugins.Store.options.loadFromSearch.limit = $scope.newLimit
           #annotator.plugins.Store.options.loadFromSearch.uri = $scope.newStore
-          #annotator.plugins.Store.options.prefix = $scope.newPrefix
           #annotator.plugins.Store.loadAnnotations()
           annotator.plugins.Store.loadAnnotationsFromSearch(annotator.plugins.Store.options.loadFromSearch)
-          heatmap.publish 'updated'
-          provider.publish 'hostUpdated'   	
         console.log('change_store ended')
 
 class Annotation

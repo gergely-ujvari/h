@@ -108,13 +108,15 @@ class User(UserMixin, Base):
         if session.get_bind().name == 'postgresql':
             lhs = func.regexp_replace(cls.username, text(r"'\.'"), '', 'g')
             rhs = username.replace('.', '')
-            return session.query(cls).filter(
-                func.lower(lhs) == rhs.lower()
-            ).first()
+        elif session.get_bind().name == 'sqlite':
+            lhs = func.replace(cls.username,'.','')
+            rhs = username.replace('.', '')
         else:
-            return session.query(cls).filter(
-                func.lower(cls.username) == username.lower()
-            ).first()
+            lhs = cls.username
+            rhs = username
+        return session.query(cls).filter(
+            func.lower(lhs) == rhs.lower()
+        ).first()
 
     @classmethod
     def get_by_username_or_email(cls, request, username, email):
@@ -123,20 +125,18 @@ class User(UserMixin, Base):
         if session.get_bind().name == 'postgresql':
             lhs = func.regexp_replace(cls.username, text(r"'\.'"), '', 'g')
             rhs = username.replace('.', '')
-            return session.query(cls).filter(
-                or_(
-                    func.lower(lhs) == rhs.lower(),
-                    cls.email == email
-                )
-            ).first()
+        elif session.get_bind().name == 'sqlite':
+            lhs = func.replace(cls.username,'.','')
+            rhs = username.replace('.', '')
         else:
-            return session.query(cls).filter(
-                or_(
-                    func.lower(cls.username) == username.lower(),
-                    cls.email == email
-                )
-            ).first()
-
+            lhs = cls.username
+            rhs = username
+        return session.query(cls).filter(
+            or_(
+                func.lower(lhs) == rhs.lower(),
+                cls.email == email
+            )
+        ).first()
 
 class UserGroup(UserGroupMixin, Base):
     pass

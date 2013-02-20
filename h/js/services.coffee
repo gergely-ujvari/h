@@ -131,6 +131,7 @@ class Hypothesis extends Annotator
                 # deletion event that gets published in the provider is not
                 # cross-published back here in the consumer and therefore
                 # the Store does not delete the annotation.
+                # XXX Maybe add provider function for updating id
                 deleteAnnotation
                   id: annotation.id
                 loadAnnotations [
@@ -270,14 +271,9 @@ class Hypothesis extends Annotator
     this
 
   # Override things not used in the angular version.
-  _setupDynamicStyle: ->
-    this
-
-  _setupViewer: ->
-    this
-
-  _setupEditor: ->
-    this
+  _setupDynamicStyle: -> this
+  _setupViewer: -> this
+  _setupEditor: -> this
 
   createAnnotation: ->
     annotation = super
@@ -319,10 +315,10 @@ class Hypothesis extends Annotator
     # added.
     if annotation.thread
       annotation.ranges = []
-
-    @provider.setupAnnotation
-      id: annotation.id
-      ranges: annotation.ranges
+    else
+      @provider.setupAnnotation
+        id: annotation.id
+        ranges: annotation.ranges
 
   showViewer: (annotations=[]) =>
     @element.injector().invoke [
@@ -356,12 +352,6 @@ class Hypothesis extends Annotator
     @provider.hideFrame()
     @element.find('#toolbar').removeClass('shown')
       .find('.tri').attr('draggable', false)
-
-  threadId: (annotation) ->
-    if annotation?.thread?
-      annotation.thread + '/' + annotation.id
-    else
-      annotation.id
 
 
 class DraftProvider

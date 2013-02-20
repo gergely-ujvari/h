@@ -9,8 +9,12 @@ annotation = ['$filter', ($filter) ->
     post: (scope, iElement, iAttrs, controller) ->
       return unless controller
 
-      # Publish the controller
-      scope.model = controller
+      # Bind shift+enter to save
+      iElement.find('textarea').bind
+        keydown: (e) ->
+          if e.keyCode == 13 && e.shiftKey
+            e.preventDefault()
+            scope.save()
 
       # Format the annotation for display
       controller.$formatters.push (value) ->
@@ -32,14 +36,14 @@ annotation = ['$filter', ($filter) ->
           #scope.previewText = ($filter 'converter') scope.editText
         else
           scope.previewText = ''
-          
       scope.$watch 'privacy', (newValue) ->
         res = scope.privacy['value']
         if scope.form.$valid
           if scope.privacy['name'] != 'Public' and 'read' of scope.privacy['value']
           	res['read'].push(scope.$modelValue.user)
           scope.$modelValue.permissions = res
-      	
+      # Publish the controller
+      scope.model = controller
   controller: 'AnnotationController'
   priority: 100  # Must run before ngModel
   require: '?ngModel'
@@ -86,7 +90,6 @@ resettable = ->
         transclude scope, (el) ->
           iElement.replaceWith el
           iElement = el
-          iElement[0].$reset = reset
       reset()
       scope.$on '$reset', reset
   priority: 5000

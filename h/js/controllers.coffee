@@ -251,6 +251,17 @@ class Annotation
       (threading.getContainer $scope.$modelValue.id).addChild replyThread
       drafts.add reply
 
+    $scope.edit = ->
+      unless annotator.plugins.Auth.haveValidToken()
+        $rootScope.$broadcast 'showAuth', true
+        return
+
+      annotator.update = true
+      annotator.showEditor $scope.$modelValue 
+
+    $scope.delete = ->
+    	console.log('delete started')
+
     $scope.$on '$routeChangeStart', -> $scope.cancel() if $scope.editing
     $scope.$on '$routeUpdate', -> $scope.cancel() if $scope.editing
 
@@ -258,11 +269,11 @@ class Annotation
       if newValue then $timeout -> $element.find('textarea').focus()
 
     $scope.choose_privacy = (p) -> $scope.privacy = p
-    	
+        	    	
     # Check if this is a brand new annotation
     if drafts.contains $scope.$modelValue
       $scope.editing = true
-      $scope.unsaved = true
+      unless annotator.update then $scope.unsaved = true
       $scope.$modelValue.permissions = { 'read': 'group:__world__' } 
 
 
@@ -274,32 +285,41 @@ class Editor
   constructor: (
     $location, $routeParams, $scope,
     annotator, drafts, threading
-  ) ->
+  ) ->  	
     save = ->
+      if annotator.update
+        annotator.update = false	    	
       $scope.$apply ->
         $location.path('/viewer').replace()
         annotator.provider.onEditorSubmit()
         annotator.provider.onEditorHide()
 
     cancel = ->
+      if annotator.update
+        annotator.update = false	    	
       $scope.$apply ->
         search = $location.search() or {}
         delete search.id
         $location.path('/viewer').search(search).replace()
         annotator.provider.onEditorHide()
 
-    annotator.subscribe 'annotationCreated', save
-    annotator.subscribe 'annotationDeleted', cancel
+    if not annotator.update
+      annotator.subscribe 'annotationCreated', save
+      annotator.subscribe 'annotationDeleted', cancel
+    else 
+      annotator.subscribe 'annotationUpdated', save
 
     $scope.$on '$destroy', ->
-      annotator.unsubscribe 'annotationCreated', save
-      annotator.unsubscribe 'annotationDeleted', cancel
+      if annotator.update
+        annotator.unsubscribe 'annotationUpdated', save
+      else
+        annotator.unsubscribe 'annotationCreated', save
+        annotator.unsubscribe 'annotationDeleted', cancel
 
     thread = (threading.getContainer $routeParams.id)
     annotation = thread.message?.annotation
     $scope.annotation = annotation
     drafts.add annotation
-
 
 class Viewer
   this.$inject = [

@@ -209,18 +209,20 @@ class Annotation
       $timeout (-> annotator.publish args...), 0, false
 
     $scope.privacyLevels = [
-     {name: 'Public', value:  { 'read': 'group:__world__' } },
-     {name: 'Private', value: { 'read': [] } }
+     {name: 'Public', value:  { 'read': 'group:__world__', 'update': []} },
+     {name: 'Private', value: { 'read': [], 'update': [] } }
     ]
     $scope.privacy = $scope.privacyLevels[0]
     
     $scope.cancel = ->
+      annotator.update = false	    	
       $scope.editing = false
       drafts.remove $scope.$modelValue
       if $scope.unsaved
         publish 'annotationDeleted', $scope.$modelValue
 
     $scope.save = ->
+      annotator.update = false	    	
       $scope.editing = false
       drafts.remove $scope.$modelValue
       if $scope.unsaved
@@ -269,12 +271,17 @@ class Annotation
       if newValue then $timeout -> $element.find('textarea').focus()
 
     $scope.choose_privacy = (p) -> $scope.privacy = p
+
+    $scope.ownAnnotation = (user) ->      	
+      if annotator.plugins.HypothesisPermissions.user? and user == annotator.plugins.HypothesisPermissions.user
+        return true
+      false
         	    	
     # Check if this is a brand new annotation
     if drafts.contains $scope.$modelValue
       $scope.editing = true
       unless annotator.update then $scope.unsaved = true
-      $scope.$modelValue.permissions = { 'read': 'group:__world__' } 
+      $scope.$modelValue.permissions = { 'read': 'group:__world__', 'update' : [$scope.$modelValue.user] } 
 
 
 class Editor
@@ -287,16 +294,12 @@ class Editor
     annotator, drafts, threading
   ) ->  	
     save = ->
-      if annotator.update
-        annotator.update = false	    	
       $scope.$apply ->
         $location.path('/viewer').replace()
         annotator.provider.onEditorSubmit()
         annotator.provider.onEditorHide()
 
     cancel = ->
-      if annotator.update
-        annotator.update = false	    	
       $scope.$apply ->
         search = $location.search() or {}
         delete search.id

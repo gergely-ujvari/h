@@ -41,6 +41,8 @@ annotation = ['$filter', ($filter) ->
         if scope.form.$valid
           if scope.privacy['name'] != 'Public' and 'read' of scope.privacy['value']
           	res['read'].push(scope.$modelValue.user)
+          if 'update' of scope.privacy['value']
+          	res['update'].push(scope.$modelValue.user)
           scope.$modelValue.permissions = res
       # Publish the controller
       scope.model = controller

@@ -15,6 +15,7 @@ class Hypothesis extends Annotator
   visible: false     # * Whether the sidebar is visible
   unsaved_drafts: [] # * Unsaved drafts currenty open
   update: false      # * Whether the editor is showed to edit an annotation
+  redact: false      # * Whether we're doing redact or simple update
 
   this.$inject = [
     '$document', '$location', '$rootScope',

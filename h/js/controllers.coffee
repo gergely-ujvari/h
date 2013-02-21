@@ -222,7 +222,12 @@ class Annotation
         publish 'annotationDeleted', $scope.$modelValue
 
     $scope.save = ->
+      if annotator.redact
+        $scope.$modelValue.user = "acct:[deleted]@" + $scope.$modelValue.user.split(/(?:acct:)|@/)[2]
+        $scope.$modelValue.created = new Date()
+          
       annotator.update = false	    	
+      annotator.redact = false
       $scope.editing = false
       drafts.remove $scope.$modelValue
       if $scope.unsaved
@@ -259,10 +264,17 @@ class Annotation
         return
 
       annotator.update = true
+      annotator.redact = false
       annotator.showEditor $scope.$modelValue 
 
     $scope.delete = ->
-    	console.log('delete started')
+      unless annotator.plugins.Auth.haveValidToken()
+        $rootScope.$broadcast 'showAuth', true
+        return
+      
+      annotator.update = true
+      annotator.redact = true
+      annotator.showEditor $scope.$modelValue 
 
     $scope.$on '$routeChangeStart', -> $scope.cancel() if $scope.editing
     $scope.$on '$routeUpdate', -> $scope.cancel() if $scope.editing

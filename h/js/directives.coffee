@@ -36,6 +36,7 @@ annotation = ['$filter', ($filter) ->
           #scope.previewText = ($filter 'converter') scope.editText
         else
           scope.previewText = ''
+          
       scope.$watch 'privacy', (newValue) ->
         res = scope.privacy['value']
         if scope.form.$valid

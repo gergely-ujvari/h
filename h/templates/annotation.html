@@ -7,14 +7,14 @@
   <div class="fave-icon show" title="Favorite"
        data-ng-click="favorite()" />
   <div class="show reply-icon" title="Reply"
-       data-ng-click="reply()" />
+       data-ng-show="notDeletedAnn(model.$viewValue.user)" data-ng-click="reply()" />
   <div class="show share-icon" title="Share"
        data-ng-click="share()" />
   <div class="show dropdown" title="More Actions">
     <div class="dropdown-toggle down-icon" role="button" />
     <ul class="dropdown-menu pull-right" role="menu">
       <li data-ng-show="ownAnnotation(model.$viewValue.user)" data-ng-click="edit()">Edit</li>
-      <li data-ng-click="delete()">Delete</li>
+      <li data-ng-show="ownAnnotation(model.$viewValue.user)" data-ng-click="delete()">Delete</li>
       <li data-ng-click="flag()">Flag</li>
     </ul>
   </div>
@@ -53,7 +53,7 @@
 <!-- Bottom controls -->
 <div class="buttonbar">
   <div data-ng-show="editing" class="annotator-controls">
-    <button data-ng-click="save()" class="btn check-icon">Save</button>
+      <button data-ng-click="save()" class="btn check-icon" data-ng-bind-template="{{ editorAction }}"/>
     <a data-ng-click="cancel()" class="x-icon">Cancel</a>
   </div>
 </div>

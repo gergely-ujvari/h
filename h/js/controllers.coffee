@@ -214,6 +214,10 @@ class Annotation
     ]
     $scope.privacy = $scope.privacyLevels[0]
     
+    if annotator.update and annotator.redact then $scope.editorAction = "Delete"
+    else if annotator.update then $scope.editorAction = "Edit"
+    else $scope.editorAction = "Save"
+    
     $scope.cancel = ->
       annotator.update = false	    	
       $scope.editing = false
@@ -284,8 +288,12 @@ class Annotation
 
     $scope.choose_privacy = (p) -> $scope.privacy = p
 
+    $scope.notDeletedAnn = (user) ->
+      if not user? then return false
+      user.split(/(?:acct:)|@/)[1] != '[deleted]'
+      	
     $scope.ownAnnotation = (user) ->      	
-      if annotator.plugins.HypothesisPermissions.user? and user == annotator.plugins.HypothesisPermissions.user
+      if annotator.plugins.HypothesisPermissions.user? and user == annotator.plugins.HypothesisPermissions.user and $scope.notDeletedAnn user
         return true
       false
         	    	

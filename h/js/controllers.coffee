@@ -216,13 +216,26 @@ class Annotation
     
     if annotator.update and annotator.redact
       $scope.editorAction = "Delete"
+      converter = new Markdown.Converter()
+      $scope.preface = converter.makeHtml "**You are about to delete this annotation:**\n"
+      $scope.uses_emphasis = $scope.$modelValue.text.indexOf("*") != -1
+      $scope.quotedText = if $scope.uses_emphasis then $scope.$modelValue.text else "*" + $scope.$modelValue.text + "*"
+      $scope.quotedText = converter.makeHtml $scope.quotedText
+      $scope.ph = "Please explain why you're deleting this annotation"
+      $scope.$modelValue.user = "acct:Delete annotation:@" + $scope.$modelValue.user.split(/(?:acct:)|@/)[2]
+      $scope.origText = $scope.$modelValue.text
     else if annotator.update
       $scope.editorAction = "Edit"
       $scope.editText = $scope.$modelValue.text
-    else $scope.editorAction = "Save"
+      $scope.ph = ""
+      converter = new Markdown.Converter()
+      $scope.preface = converter.makeHtml "**You are about to edit this annotation:**\n"
+    else 
+      $scope.editorAction = "Save"
+      $scope.ph = ""
     
-    $scope.isDelete = ->
-      $scope.editorAction == 'Delete'
+    $scope.isDelete = -> $scope.editorAction == 'Delete'
+    $scope.isEdit   = -> $scope.editorAction == 'Edit'
     
     $scope.cancel = ->
       annotator.update = false	    	
@@ -233,8 +246,13 @@ class Annotation
 
     $scope.save = ->
       if annotator.redact
-        $scope.$modelValue.user = "acct:[deleted]@" + $scope.$modelValue.user.split(/(?:acct:)|@/)[2]
+        $scope.$modelValue.user = "acct:Annotation deleted.@" + $scope.$modelValue.user.split(/(?:acct:)|@/)[2]
         $scope.$modelValue.created = new Date()
+
+        text =  if $scope.origText != $scope.$modelValue.text then $scope.$modelValue.text else ''
+        uses_emphasis = $scope.previewText.indexOf("*") != -1        
+        reason = if uses_emphasis then text else ("*" + text + "*")          
+        $scope.$modelValue.text = if reason == "**" then "**(No reason given.)**" else "**Reason**: " + reason
           
       annotator.update = false	    	
       annotator.redact = false
@@ -296,7 +314,7 @@ class Annotation
 
     $scope.notDeletedAnn = (user) ->
       if not user? then return false
-      user.split(/(?:acct:)|@/)[1] != '[deleted]'
+      user.split(/(?:acct:)|@/)[1] != 'Annotation deleted.'
       	
     $scope.ownAnnotation = (user) ->      	
       if annotator.plugins.HypothesisPermissions.user? and user == annotator.plugins.HypothesisPermissions.user and $scope.notDeletedAnn user

@@ -37,6 +37,9 @@
     </ul>
   </div>
 
+  <div data-ng-show="isDelete()">
+    <br/>Please give a reason for deleting this annotation!
+  </div>
   <textarea data-ng-model="editText"
             class="body"
             name="text"

@@ -214,9 +214,15 @@ class Annotation
     ]
     $scope.privacy = $scope.privacyLevels[0]
     
-    if annotator.update and annotator.redact then $scope.editorAction = "Delete"
-    else if annotator.update then $scope.editorAction = "Edit"
+    if annotator.update and annotator.redact
+      $scope.editorAction = "Delete"
+    else if annotator.update
+      $scope.editorAction = "Edit"
+      $scope.editText = $scope.$modelValue.text
     else $scope.editorAction = "Save"
+    
+    $scope.isDelete = ->
+      $scope.editorAction == 'Delete'
     
     $scope.cancel = ->
       annotator.update = false	    	

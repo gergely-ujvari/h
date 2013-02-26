@@ -44,6 +44,8 @@ annotation = ['$filter', ($filter) ->
           	res['read'].push(scope.$modelValue.user)
           if 'update' of scope.privacy['value']
           	res['update'].push(scope.$modelValue.user)
+          if 'delete' of scope.privacy['value']
+          	res['delete'].push(scope.$modelValue.user)
           scope.$modelValue.permissions = res
       # Publish the controller
       scope.model = controller

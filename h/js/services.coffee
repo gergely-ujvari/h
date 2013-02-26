@@ -14,8 +14,7 @@ class Hypothesis extends Annotator
   detail: false      # * Whether the viewer shows a summary or detail listing
   visible: false     # * Whether the sidebar is visible
   unsaved_drafts: [] # * Unsaved drafts currenty open
-  update: false      # * Whether the editor is showed to edit an annotation
-  redact: false      # * Whether we're doing redact or simple update
+  edit_action: 'save'# * Current editor action. We use the followings: 'save', 'edit', 'redact', 'delete'
 
   this.$inject = [
     '$document', '$location', '$rootScope',
@@ -114,7 +113,7 @@ class Hypothesis extends Annotator
                   thread.message = null
                   threading.pruneEmpties thread.parent
                 else
-                  delete threading.idTable[annotation.id]
+                  delete threading.getIdTable()[annotation.id]
 
                 # Create the new thread
                 thread = (threading.getContainer data.id)

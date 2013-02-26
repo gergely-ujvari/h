@@ -112,12 +112,18 @@
     return function() {
       var idTable = {};
     
+      function getIdTable() {
+    	  return idTable;
+      }
+      
       function thread(messages) {
         idTable = this.createIdTable(messages);
         var root = messageContainer();
         _.each(_.keys(idTable), function(id) {
           var container = idTable[id];
-          if (!_.include(_.keys(container), "parent")) root.addChild(container);          
+          if (!_.include(_.keys(container), "parent")) {
+        	  root.addChild(container);          
+          }
         })
         delete idTable;
         pruneEmpties(root);
@@ -269,7 +275,8 @@
         pruneEmpties: pruneEmpties,
         groupBySubject: groupBySubject,
         thread: thread,
-        idTable: idTable
+        getIdTable: getIdTable
+        //idTable: idTable
       }
     }();
   }

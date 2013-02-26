@@ -37,8 +37,8 @@
     </ul>
   </div>
 
-  <div class="body" data-ng-show="isDelete()" data-ng-bind-html="preface"/>
-  <div class="body" data-ng-show="isDelete()" data-ng-bind-html="quotedText"/>
+  <div class="body" data-ng-show="isRedact()" data-ng-bind-html="preface"/>
+  <div class="body" data-ng-show="isRedact()" data-ng-bind-html="quotedText"/>
   <div class="body" data-ng-show="isEdit()" data-ng-bind-html="preface"/>
   <textarea data-ng-model="editText"
             class="body"
@@ -57,7 +57,7 @@
 <!-- Bottom controls -->
 <div class="buttonbar">
   <div data-ng-show="editing" class="annotator-controls">
-    <button data-ng-click="save()" class="btn check-icon" data-ng-bind-template="{{ editorAction }}"/>
+    <button data-ng-click="save()" class="btn check-icon" data-ng-bind-template="{{ editorBtnLabel }}"/>
     <a data-ng-click="cancel()" class="x-icon">Cancel</a>
   </div>
 </div>

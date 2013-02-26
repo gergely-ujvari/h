@@ -121,9 +121,7 @@
         var root = messageContainer();
         _.each(_.keys(idTable), function(id) {
           var container = idTable[id];
-          if (!_.include(_.keys(container), "parent")) {
-        	  root.addChild(container);          
-          }
+          if (!_.include(_.keys(container), "parent")) root.addChild(container);          
         })
         delete idTable;
         pruneEmpties(root);
@@ -276,7 +274,6 @@
         groupBySubject: groupBySubject,
         thread: thread,
         getIdTable: getIdTable
-        //idTable: idTable
       }
     }();
   }

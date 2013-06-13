@@ -185,6 +185,8 @@ app = Bundle(
                 'displayer',
                 'services',
                 'streamer',
+                'sockjswrapper',
+                'userstream',
             )
         ],
         output='js/app.min.js'

@@ -8,6 +8,7 @@ __all__ = [
 
 from pyramid.view import view_config, view_defaults
 from pyramid.traversal import find_resource
+from pyramid import httpexceptions
 
 from horus.views import (
     AuthController,

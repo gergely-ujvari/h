@@ -76,6 +76,26 @@ class Annotation(BaseController):
         return request.context
 
 
+@view_defaults(context='h.resources.UserStream', layout='site')
+class UserStream(BaseController):
+    @view_config(accept='text/html', renderer='templates/userstream.pt')
+    def __html__(self):
+        request = self.request
+        context = request.context
+        if context['user_count'] == 0:
+            raise httpexceptions.HTTPNotFound(
+                body_template=
+                "No such user exists."
+            )
+
+        log.info('-----------------------------------------------------------------')
+        log.info(context)
+        log.info('-----------------------------------------------------------------')
+
+        return context
+
+
+
 def includeme(config):
     config.add_view(
         'horus.views.AuthController',

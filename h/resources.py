@@ -23,7 +23,7 @@ from zope.interface import implementer
 import BeautifulSoup
 
 from h import interfaces
-
+from h.models import get_session
 
 import logging
 log = logging.getLogger(__name__)
@@ -286,9 +286,29 @@ class AnnotationFactory(BaseResource):
 
         return annotation
 
+class UserStream(BaseResource, dict):
+    pass
+
+class UserStreamFactory(BaseResource):
+    def __getitem__(self, key):
+        #Check if user exists
+        request = self.request
+        registry = request.registry
+        User = registry.getUtility(interfaces.IUserClass)
+        user_count = get_session(request).query(User).filter(User.username.ilike(key)).count()
+
+        user_stream = UserStream(request)
+        user_stream.update({
+            'user': key,
+            'user_count': user_count
+        })
+
+        return user_stream
+
 
 def includeme(config):
     config.set_root_factory(RootFactory)
     config.add_route('index', '/')
     RootFactory.app = AppFactory
     RootFactory.a = AnnotationFactory
+    RootFactory.u = UserStreamFactory

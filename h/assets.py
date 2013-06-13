@@ -130,6 +130,9 @@ pagedown = Uglify(
     output='lib/Markdown.Converter.min.js'
 )
 
+sockjs = Uglify('h:lib/sockjs-0.3.4.js', output='lib/sockjs-client.min.js')
+
+
 domTextFamily = Uglify(
     Coffee('lib/dom_text_mapper.coffee', output='js/dom_text_mapper.js'),
     Coffee('lib/dom_text_matcher.coffee', output='js/dom_text_matcher.js'),
@@ -164,6 +167,7 @@ app = Bundle(
     jwz,
     pagedown,
     raf,
+    sockjs,
     Uglify(
         *[
             Coffee('js/%s.coffee' % name,
@@ -175,6 +179,8 @@ app = Bundle(
                 'filters',
                 'directives',
                 'services',
+                'sockjswrapper',
+                'userstream',
             )
         ],
         output='js/app.min.js'

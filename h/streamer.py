@@ -238,7 +238,6 @@ class StreamerSession(Session):
                 else:
                     annotations = store.search()
 
-                #url_analyzer = UrlAnalyzer()
                 to_send = []
                 if payload["past_data"]["load_past"] == "time":
                     now = datetime.utcnow().replace(tzinfo=tzutc())
@@ -260,7 +259,6 @@ class StreamerSession(Session):
                 elif payload["past_data"]["load_past"] == "replies":
                     sent_hits = 0
                     for annotation in annotations:
-                        #annotation.update(url_analyzer._url_values(annotation['uri']))
                         to_send = [annotation] + to_send
                         sent_hits += 1
 
@@ -283,6 +281,7 @@ def after_action(annotation, action):
     for connection in StreamerSession.connections:
         try:
             if connection.filter.match(annotation, action):
+                annotation.update(UrlAnalyzer.url_values_from_document(annotation))
                 connection.send([annotation, action])
         except:
             log.info(traceback.format_exc())

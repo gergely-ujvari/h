@@ -8,6 +8,7 @@ from pyramid.request import Request
 from pyramid.wsgi import wsgiapp2
 
 from h import interfaces, models, streamer
+from cStringIO import StringIO
 
 import logging
 log = logging.getLogger(__name__)
@@ -41,6 +42,23 @@ class Store(object):
     def search(self, **query):
         url = self.request.route_url('api', subpath='search', _query=query)
         subreq = Request.blank(url)
+        return self.request.invoke_subrequest(subreq).json['rows']
+
+    def search_raw(self, query):
+        url = self.request.route_url('api', subpath='search_raw')
+        subreq = Request.blank(url, method='POST')
+        subreq.json = query
+        #subreq.content_type = 'text/xml'
+        #subreq.body_file = StringIO('<xml></xml>')
+        #subreq.POST.add('query', query)
+        #subreq = Request.blank(url)
+        result = self.request.invoke_subrequest(subreq)
+        log.info('----------------------------------------')
+        log.info(str(result))
+        log.info('----------------------------------------')
+        log.info(str(result).json)
+        log.info('----------------------------------------')
+
         return self.request.invoke_subrequest(subreq).json['rows']
 
 

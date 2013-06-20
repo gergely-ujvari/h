@@ -11,6 +11,8 @@ from h import interfaces, models, streamer
 from cStringIO import StringIO
 
 import logging
+import json
+
 log = logging.getLogger(__name__)
 
 class Store(object):
@@ -48,18 +50,13 @@ class Store(object):
         url = self.request.route_url('api', subpath='search_raw')
         subreq = Request.blank(url, method='POST')
         subreq.json = query
-        #subreq.content_type = 'text/xml'
-        #subreq.body_file = StringIO('<xml></xml>')
-        #subreq.POST.add('query', query)
-        #subreq = Request.blank(url)
         result = self.request.invoke_subrequest(subreq)
-        log.info('----------------------------------------')
-        log.info(str(result))
-        log.info('----------------------------------------')
-        log.info(str(result).json)
-        log.info('----------------------------------------')
+        payload = json.loads(result.body)
 
-        return self.request.invoke_subrequest(subreq).json['rows']
+        hits = []
+        for res in payload['hits']['hits']:
+            hits.append(res["_source"])
+        return hits
 
 
 def anonymize_deletes(annotation):

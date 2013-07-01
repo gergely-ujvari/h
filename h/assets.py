@@ -123,6 +123,14 @@ jquery_mousewheel = Uglify(
     'lib/jquery.mousewheel.js', output='lib/jquery.mousewheel.min.js'
 )
 
+jquery_ui = Bundle(
+    Uglify('h:lib/jquery.ui.widget.js', output='lib/jquery.ui.widget.min.js'),
+    Uglify('h:lib/jquery.ui.autocomplete.js', output='lib/jquery.ui.autocomplete.min.js'),
+    Uglify('h:lib/jquery.ui.core.js', output='lib/jquery.ui.core.min.js'),
+    Uglify('h:lib/jquery.ui.menu.js', output='lib/jquery.ui.menu.min.js'),
+    Uglify('h:lib/jquery.ui.position.js', output='lib/jquery.ui.position.min.js')
+)
+
 # Polyfills
 raf = Uglify('lib/polyfills/raf.js', output='lib/polyfills/raf.js.min')
 
@@ -140,14 +148,6 @@ pagedown = Uglify(
 )
 
 sockjs = Uglify('h:lib/sockjs-0.3.4.js', output='lib/sockjs-client.min.js')
-
-jquery_ui = Bundle(
-    Uglify('h:lib/jquery.ui.widget.js', output='lib/jquery.ui.widget.min.js'),
-    Uglify('h:lib/jquery.ui.autocomplete.js', output='lib/jquery.ui.autocomplete.min.js'),
-    Uglify('h:lib/jquery.ui.core.js', output='lib/jquery.ui.core.min.js'),
-    Uglify('h:lib/jquery.ui.menu.js', output='lib/jquery.ui.menu.min.js'),
-    Uglify('h:lib/jquery.ui.position.js', output='lib/jquery.ui.position.min.js')
-)
 
 visualsearch = Bundle(
     Uglify('h:lib/underscore-1.4.3.js', output='lib/underscore.min.js'),

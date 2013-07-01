@@ -466,10 +466,15 @@ class VisualSearchProvider
           console.log 'search'
         facetMatches: (callback) ->
           console.log 'facetMatches'
+          callback ['user', 'group', 'tag', 'text']
         valueMatches: (facet, searchTerm, callback) ->
           console.log 'valueMatches'
+          switch facet
+            when 'group' then callback ['public', 'private']
 
   $get: -> this
+  searchValue: -> @vs.searchBox.value()
+  searchQuery: -> @vs.searchQuery.facets()
 
 angular.module('h.services', ['ngResource'])
   .provider('authentication', AuthenticationProvider)

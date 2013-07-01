@@ -18,6 +18,8 @@
 
       <div class="tri" ng-click="frame.visible = !frame.visible"></div>
 
+      <div class="visual_search"></div>
+
       <div class="inner" ng-switch="auth.persona">
         <a class="pull-right" href=""
            ng-click="sheet.collapsed = false;

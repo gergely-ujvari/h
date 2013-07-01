@@ -470,9 +470,24 @@ class FlashProvider
       @queues[queue] = @queues[queue]?.concat messages
       this._process() unless @timeout?
 
+class VisualSearchProvider
+  constructor: ->
+    @vs = VS.init
+      container: $('.visual_search')
+      query: ''
+      callbacks:
+        search: (query, searchCollection) ->
+          console.log 'search'
+        facetMatches: (callback) ->
+          console.log 'facetMatches'
+        valueMatches: (facet, searchTerm, callback) ->
+          console.log 'valueMatches'
+
+  $get: -> this
 
 angular.module('h.services', ['ngResource'])
   .provider('authentication', AuthenticationProvider)
   .provider('drafts', DraftProvider)
   .provider('flash', FlashProvider)
+  .provider('visualsearch', VisualSearchProvider)
   .service('annotator', Hypothesis)

@@ -136,7 +136,10 @@ class Hypothesis extends Annotator
             if matches
               matched.push annotation
 
-            @showViewer matched
+          $location.search('id', null)
+          @showViewer matched
+          $rootScope.$digest()
+
 
           console.log matched
 
@@ -271,6 +274,8 @@ class Hypothesis extends Annotator
   setupAnnotation: (annotation) -> annotation
 
   showViewer: (annotations=[]) =>
+    console.log 'showViewer'
+    console.log annotations
     this.show()
     @element.injector().invoke [
       '$location', '$rootScope',

@@ -50,8 +50,8 @@ class Hypothesis extends Annotator
   viewer:
     addField: (-> )
 
-  this.$inject = ['$document', '$location', '$rootScope', '$route', 'drafts']
-  constructor: ($document, $location, $rootScope, $route, drafts) ->
+  this.$inject = ['$document', '$location', '$rootScope', '$route', 'drafts', '$filter']
+  constructor: ($document, $location, $rootScope, $route, drafts, $filter) ->
     super ($document.find 'body')
 
     # Load plugins
@@ -117,6 +117,47 @@ class Hypothesis extends Annotator
 
     # Reload the route after annotations are loaded
     this.subscribe 'annotationsLoaded', -> $route.reload()
+
+    @user_filter = $filter('userName')
+    @visualSearch = VS.init
+      container: $('.visual_search')
+      query: ''
+      callbacks:
+        search: (query, searchCollection) =>
+          console.log 'search'
+          #console.log query
+          #console.log searchCollection
+          matched = []
+          annotations = @plugins.Store.annotations
+          for annotation in annotations
+            matches = true
+            for searchItem in searchCollection.models
+              category = searchItem.attributes.category
+              value = searchItem.attributes.value
+              switch category
+                when 'user'
+                  userName = @user_filter annotation.user
+                  unless userName is value
+                    matches = false
+                    break
+                when 'text'
+                  unless annotation.text.indexOf(value) > -1
+                    matches = false
+                    break
+            if matches
+              matched.push annotation
+
+            @showViewer matched
+
+          console.log matched
+
+        facetMatches: (callback) ->
+          callback ['user', 'group', 'tag', 'text']
+        valueMatches: (facet, searchTerm, callback) ->
+          switch facet
+            when 'group' then callback ['public', 'private']
+
+
 
   _setupXDM: ->
     $location = @element.injector().get '$location'
@@ -470,29 +511,8 @@ class FlashProvider
       @queues[queue] = @queues[queue]?.concat messages
       this._process() unless @timeout?
 
-class VisualSearchProvider
-  constructor: ->
-    @vs = VS.init
-      container: $('.visual_search')
-      query: ''
-      callbacks:
-        search: (query, searchCollection) ->
-          console.log 'search'
-        facetMatches: (callback) ->
-          console.log 'facetMatches'
-          callback ['user', 'group', 'tag', 'text']
-        valueMatches: (facet, searchTerm, callback) ->
-          console.log 'valueMatches'
-          switch facet
-            when 'group' then callback ['public', 'private']
-
-  $get: -> this
-  searchValue: -> @vs.searchBox.value()
-  searchQuery: -> @vs.searchQuery.facets()
-
-angular.module('h.services', ['ngResource'])
+angular.module('h.services', ['ngResource','h.filters'])
   .provider('authentication', AuthenticationProvider)
   .provider('drafts', DraftProvider)
   .provider('flash', FlashProvider)
-  .provider('visualsearch', VisualSearchProvider)
   .service('annotator', Hypothesis)

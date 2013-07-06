@@ -444,17 +444,25 @@ class Viewer
       console.log 'routeParams'
       console.log $routeParams
       if $routeParams.mode? and $routeParams.mode is 'search'
+        delete $routeParams.mode
+        console.log $routeParams
         console.log 'viewer search'
         $scope.thread = null
         $scope.id_filter = $scope.annotations
+        $scope.annotations = []
         heatmap = annotator.plugins.Heatmap
-        annotations = []
+        threads = []
         for bucket in heatmap.buckets
-          annotations.push.apply annotations,bucket
-        $scope.annotations = annotations
+          for annotation in bucket
+            thread = annotator.threading.getContainer annotation.id
+            threads.push thread
+        $scope.threads = threads
+        console.log 'annotations ----------------------------------'
+        console.log threads
         #Replace this with threading call
         $scope.detail = false
         $scope.search = true
+        console.log $scope.search
       else
         console.log 'summary'
         $scope.detail = false

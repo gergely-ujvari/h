@@ -368,8 +368,29 @@ class Viewer
     annotator
   ) ->
     {provider, threading} = annotator
+    console.log 'ShowViewer start'
+
+    listening = false
+    refresh = =>
+      return unless $scope.frame.visible
+      this.refresh $scope, $routeParams, annotator
+      if listening
+        if $scope.detail
+          plugins.Heatmap.unsubscribe 'updated', refresh
+          listening = false
+      else
+        unless $scope.detail
+          plugins.Heatmap.subscribe 'updated', refresh
+          listening = true
+
+    $scope.showDetail = (annotation) ->
+      console.log 'showDetail'
+      search = $location.search() or {}
+      search.id = annotation.id
+      $location.search(search).replace()
 
     $scope.focus = (annotation) ->
+      console.log 'focus'
       if angular.isArray annotation
         highlights = (a.$$tag for a in annotation when a?)
       else if angular.isObject annotation
@@ -403,6 +424,43 @@ class Viewer
       else
         return new Date()
 
+    $scope.$on '$destroy', ->
+      if listening then plugins.Heatmap.unsubscribe 'updated', refresh
+
+    $scope.$on '$routeUpdate', refresh
+
+    refresh()
+
+  refresh: ($scope, $routeParams, annotator) =>
+    console.log '-------------------------------'
+    console.log $scope.annotations
+    if $routeParams.id? and annotator.threading.idTable[$routeParams.id]?
+      console.log 'detail'
+      $scope.detail = true
+      $scope.search = false
+      $scope.thread = annotator.threading.getContainer $routeParams.id
+      $scope.focus $scope.thread.message?
+    else
+      console.log 'routeParams'
+      console.log $routeParams
+      if $routeParams.mode? and $routeParams.mode is 'search'
+        console.log 'viewer search'
+        $scope.thread = null
+        $scope.id_filter = $scope.annotations
+        heatmap = annotator.plugins.Heatmap
+        annotations = []
+        for bucket in heatmap.buckets
+          annotations.push.apply annotations,bucket
+        $scope.annotations = annotations
+        #Replace this with threading call
+        $scope.detail = false
+        $scope.search = true
+      else
+        console.log 'summary'
+        $scope.detail = false
+        $scope.search = false
+        $scope.thread = null
+        $scope.focus []
 
 angular.module('h.controllers', ['bootstrap'])
   .controller('AppController', App)

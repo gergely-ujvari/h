@@ -31,9 +31,10 @@
         </div>
       </div>
 
-      <div class="visual_container">
+<!--      <div class="visual_container">
         <div class="visual_search"></div>
-      </div>
+      </div> -->
+        <div class="visual_search"></div>
 
       <!-- Account and Authentication -->
       <div class="sheet collapsed"

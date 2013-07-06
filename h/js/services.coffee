@@ -114,7 +114,7 @@ class Hypothesis extends Annotator
       callbacks:
         search: (query, searchCollection) =>
           console.log 'search'
-          #console.log query
+          console.log 'query: ' + query
           #console.log searchCollection
           matched = []
           annotations = @plugins.Store.annotations
@@ -134,9 +134,10 @@ class Hypothesis extends Annotator
                     matches = false
                     break
             if matches
-              matched.push annotation
+              matched.push annotation.id
 
-          $location.search('id', null)
+          console.log matched
+          $location.search({'id' : null, 'mode' : 'search'})
           @showViewer matched
           $rootScope.$digest()
 
@@ -144,7 +145,7 @@ class Hypothesis extends Annotator
           console.log matched
 
         facetMatches: (callback) ->
-          callback ['user', 'group', 'tag', 'text']
+          callback ['user', 'group', 'tag', 'text','time']
         valueMatches: (facet, searchTerm, callback) ->
           switch facet
             when 'group' then callback ['public', 'private']
@@ -274,7 +275,7 @@ class Hypothesis extends Annotator
   setupAnnotation: (annotation) -> annotation
 
   showViewer: (annotations=[]) =>
-    console.log 'showViewer'
+    console.log 'showViewer - annotations'
     console.log annotations
     this.show()
     @element.injector().invoke [

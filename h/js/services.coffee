@@ -141,9 +141,6 @@ class Hypothesis extends Annotator
           @showViewer matched
           $rootScope.$digest()
 
-
-          console.log matched
-
         facetMatches: (callback) ->
           callback ['user', 'group', 'tag', 'text','time']
         valueMatches: (facet, searchTerm, callback) ->

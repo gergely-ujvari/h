@@ -1,7 +1,9 @@
 <ul class="sliding-panels">
 
   <!-- Summaries -->
-  <li ng-class="detail && 'squished' || ''" ng-show="annotations">
+  <li ng-class="detail && 'squished' || ''"
+      ng-show="annotations">
+    <p>SUMMARY</p>
     <ul>
       <li ng-click="showDetail(annotation)"
           ng-mouseenter="focus(annotation)"
@@ -14,7 +16,9 @@
   </li>
 
   <!-- Details -->
-  <li ng-class="detail && thread.message && 'show' || ''">
+  <li ng-class="detail && thread.message && 'show' || ''"
+      ng-hide="search">
+    <p>DETAIL</p>
     <!-- Excerpts -->
     <div class="paper excerpt"
          ng-repeat="target in thread.message.target">
@@ -47,9 +51,12 @@
   </li>
 
   <!-- Search -->
-  <li ng-class="detail && thread.message && 'show' || ''" ng-show="search">
+  <li ng-class="search && 'show' || ''"
+      ng-show="search">
+    <p>SEARCH</p>
     <!-- Excerpts -->
-<!---    <div class="paper excerpt"
+    <!--
+    <div class="paper excerpt"
          ng-repeat="target in thread.message.target">
       <blockquote ng-bind="target.quote" ng-hide="diff" />
       <blockquote ng-bind-html-unsafe="target.diffHTML" ng-show="diff" />
@@ -57,32 +64,11 @@
         <input type="checkbox" ng-model="diff">Show differences</input>
       </div>
     </div>
--->
-
-    <!-- Thread view -->
-    <div data-recursive="" class="paper thread">
-      <!-- Annotation -->
-      <div class="detail annotation"
-           name="annotation"
-           ng-model="$parent.thread.message" />
-      <ul >
-          <li ng-repeat="annotation in annotations"
-              class="paper summary">
-            <div ng-model="$parent.annotation" class="annotation" />
-
-            <!-- Replies -->
-            <li class="thread"
-                ng-animate="{hide: 'collapse-hide', show: 'collapse-show'}"
-                ng-hide="collapsed"
-                ng-class="collapsed && 'collapsed' || ''"
-                ng-repeat="thread in annotation.children | orderBy:sortThread:true"
-                ng-transclude>
-              <a href="" class="threadexp"
-                 title="{{collapsed && 'Expand' || 'Collapse'}}"
-                 ng-click="collapsed = !collapsed" />
-            </li>
-          </li>
-      </ul>
+    -->
+    <div ng-repeat="thread in threads"
+      class="paper summary">
+        <p>BASZOD</p>
+        <div>{{thread.message}}</div>
     </div>
   </li>
 

@@ -278,6 +278,9 @@ class Hypothesis extends Annotator
     @element.injector().invoke [
       '$location', '$rootScope',
       ($location, $rootScope) ->
+        console.log 'injector - invoke'
+        console.log $location
+        console.log $rootScope
         $rootScope.annotations = annotations
         $location.path('/viewer').replace()
         $rootScope.$digest()

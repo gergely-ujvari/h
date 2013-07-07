@@ -456,7 +456,7 @@ class Viewer
         console.log $routeParams
         console.log 'viewer search'
         $scope.thread = null
-        $scope.id_filter = $scope.annotations
+        #$scope.id_filter = $scope.annotations
         #$scope.annotations = []
         heatmap = annotator.plugins.Heatmap
         threads = []

@@ -4,7 +4,6 @@
   <!-- Summaries -->
   <li ng-class="detail && 'squished' || ''"
       ng-show="annotations&&!search">
-    <p>SUMMARY</p>
     <ul>
       <li ng-class="detail && 'detail' || 'summary'"
           ng-click="toggleDetail($event)"
@@ -50,7 +49,6 @@
   <!-- Details -->
   <li ng-class="detail && thread.message && 'show' || ''"
       ng-hide="search">
-    <p>DETAIL</p>
     <!-- Excerpts -->
     <div class="paper excerpt"
          ng-repeat="target in thread.message.target">
@@ -85,7 +83,6 @@
   <!-- Search -->
   <li ng-class="search && 'show' || ''"
       ng-show="search">
-    <p>SEARCH</p>
     <div ng-repeat="thread in threads"
       class="summary">
       <!-- Thread view -->

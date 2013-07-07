@@ -1020,9 +1020,18 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 //Visual Search////////////////////////////////
 //Imported their css here
 
+.small-inner {
+  margin:0px 0.5em 0px 1em;
+}
+
+.search-container {
+  width: auto;
+  float: none;
+  overflow: hidden;
+}
+
 .visual_container {
   margin-left: 3em;
-  float: left;
 }
 
 .visual_search {
@@ -1120,8 +1129,8 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
   -moz-box-shadow:inset 0 0 3px #ccc;
   box-shadow:inset 0 0 3px #ccc;
   min-height:28px;
-  //height:1em;
-  height:auto;
+  height:1em;
+  //height:auto;
 }
 
 .VS-search .VS-placeholder {

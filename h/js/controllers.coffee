@@ -83,7 +83,7 @@ class App
           else
             return unless drafts.discard()
             dynamicBucket = false
-            $location.search('id', null)
+            $location.search({'id' : null })
             annotator.showViewer heatmap.buckets[bucket]
             $scope.$digest()
 
@@ -457,7 +457,7 @@ class Viewer
         console.log 'viewer search'
         $scope.thread = null
         $scope.id_filter = $scope.annotations
-        $scope.annotations = []
+        #$scope.annotations = []
         heatmap = annotator.plugins.Heatmap
         threads = []
         for bucket in heatmap.buckets

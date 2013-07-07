@@ -59,13 +59,20 @@
       <!-- Thread view -->
       <div data-recursive="" class="paper thread">
         <!-- Annotation -->
-        <div class="detail annotation"
+        <div ng-show="$parent.annotations.indexOf($parent.thread.message.id)!=-1 && !open">
+        <div class="detail annotation thread"
            name="annotation"
+           ng-class="collapsed && 'collapsed' || ''"
            ng-model="$parent.thread.message"
-           ng-show="$parent.annotations.indexOf($parent.thread.message.id)!=-1 && !collapsed"/>
-        <div ng-hide="$parent.annotations.indexOf($parent.thread.message.id)!=-1 && !collapsed">
-            <p>HIDDEN</p>
+           ng-show="$parent.annotations.indexOf($parent.thread.message.id)!=-1 && !collapsed"
+           />
         </div>
+
+           <a href="" class="threadexp"
+               title="{{open && 'Expand' || 'Collapse'}}"
+               ng-click="open = !open"
+             />
+
         <!-- Replies -->
         <ul >
           <li class="thread"

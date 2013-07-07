@@ -61,7 +61,11 @@
         <!-- Annotation -->
         <div class="detail annotation"
            name="annotation"
-           ng-model="$parent.thread.message" />
+           ng-model="$parent.thread.message"
+           ng-show="$parent.annotations.indexOf($parent.thread.message.id)!=-1 && !collapsed"/>
+        <div ng-hide="$parent.annotations.indexOf($parent.thread.message.id)!=-1 && !collapsed">
+            <p>HIDDEN</p>
+        </div>
         <!-- Replies -->
         <ul >
           <li class="thread"

@@ -385,14 +385,20 @@ class Viewer
 
     listening = false
     refresh = =>
+      console.log 'pre-refresh'
       return unless $scope.frame.visible
+      console.log 'before refr'
       this.refresh $scope, $routeParams, annotator
       if listening
+        console.log 'listening'
         if $scope.detail
+          console.log 'detail'
           plugins.Heatmap.unsubscribe 'updated', refresh
           listening = false
       else
+        console.log 'not listening'
         unless $scope.detail
+          console.log 'not detail'
           plugins.Heatmap.subscribe 'updated', refresh
           listening = true
 
@@ -419,6 +425,7 @@ class Viewer
         return new Date()
 
     $scope.$on '$destroy', ->
+      console.log 'viewer - destroy'
       if listening then plugins.Heatmap.unsubscribe 'updated', refresh
 
     $scope.$on '$routeUpdate', refresh
@@ -426,6 +433,7 @@ class Viewer
     refresh()
 
   refresh: ($scope, $routeParams, annotator) =>
+    console.log 'refresh'
     console.log '-------------------------------'
     console.log $scope.annotations
     if $routeParams.id? and annotator.threading.idTable[$routeParams.id]?

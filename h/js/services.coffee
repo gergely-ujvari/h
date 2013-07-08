@@ -113,9 +113,6 @@ class Hypothesis extends Annotator
       query: ''
       callbacks:
         search: (query, searchCollection) =>
-          console.log 'search'
-          console.log 'query: ' + query
-          #console.log searchCollection
           matched = []
           whole_document = true
           for searchItem in searchCollection.models
@@ -177,7 +174,6 @@ class Hypothesis extends Annotator
               matched.push annotation.id
 
           $rootScope.search_filter = matched
-          console.log matched
           $location.search({'id' : null, 'mode' : 'search', 'whole_document' : whole_document})
           @showViewer annotations
           $rootScope.$digest()
@@ -314,15 +310,10 @@ class Hypothesis extends Annotator
   setupAnnotation: (annotation) -> annotation
 
   showViewer: (annotations=[]) =>
-    console.log 'showViewer - annotations'
-    console.log annotations
     this.show()
     @element.injector().invoke [
       '$location', '$rootScope',
       ($location, $rootScope) ->
-        console.log 'injector - invoke'
-        console.log $location
-        console.log $rootScope
         $rootScope.annotations = annotations
         $location.path('/viewer').replace()
         $rootScope.$digest()

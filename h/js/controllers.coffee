@@ -381,35 +381,25 @@ class Viewer
   ) ->
     {plugins, provider} = annotator
 
-    console.log 'ShowViewer start'
-
     listening = false
     refresh = =>
-      console.log 'pre-refresh'
       return unless $scope.frame.visible
-      console.log 'before refr'
       this.refresh $scope, $routeParams, annotator
       if listening
-        console.log 'listening'
         if $scope.detail or $scope.search
-          console.log 'detail'
           plugins.Heatmap.unsubscribe 'updated', refresh
           listening = false
       else
-        console.log 'not listening'
         unless $scope.detail or $scope.search
-          console.log 'not detail'
           plugins.Heatmap.subscribe 'updated', refresh
           listening = true
 
     $scope.showDetail = (annotation) ->
-      console.log 'showDetail'
       search = $location.search() or {}
       search.id = annotation.id
       $location.search(search).replace()
 
     $scope.focus = (annotation) ->
-      console.log 'focus'
       if angular.isArray annotation
         highlights = (a.$$tag for a in annotation when a?)
       else if angular.isObject annotation
@@ -425,7 +415,6 @@ class Viewer
         return new Date()
 
     $scope.$on '$destroy', ->
-      console.log 'viewer - destroy'
       if listening then plugins.Heatmap.unsubscribe 'updated', refresh
 
     $scope.$on '$routeUpdate', refresh
@@ -433,24 +422,14 @@ class Viewer
     refresh()
 
   refresh: ($scope, $routeParams, annotator) =>
-    console.log 'refresh'
-    console.log '-------------------------------'
-    console.log $scope.annotations
     if $routeParams.id? and annotator.threading.idTable[$routeParams.id]?
-      console.log 'detail'
       $scope.detail = true
       $scope.search = false
       $scope.thread = annotator.threading.getContainer $routeParams.id
       $scope.focus $scope.thread.message?
     else
-      console.log 'routeParams'
-      console.log $routeParams
       if $routeParams.mode? and $routeParams.mode is 'search'
         delete $routeParams.mode
-        console.log $routeParams
-        console.log 'viewer search'
-        console.log 'search filter'
-        console.log $scope.search_filter
         $scope.thread = null
         heatmap = annotator.plugins.Heatmap
         threads = []
@@ -471,14 +450,10 @@ class Viewer
             if $routeParams.whole_document or annotation in $scope.annotations
               threads.push thread
         $scope.threads = threads
-        console.log 'annotations ----------------------------------'
-        console.log threads
         #Replace this with threading call
         $scope.detail = false
         $scope.search = true
-        console.log $scope.search
       else
-        console.log 'summary'
         $scope.detail = false
         $scope.search = false
         $scope.thread = null

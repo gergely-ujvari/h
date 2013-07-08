@@ -449,14 +449,25 @@ class Viewer
         delete $routeParams.mode
         console.log $routeParams
         console.log 'viewer search'
+        console.log 'search filter'
+        console.log $scope.search_filter
         $scope.thread = null
-        #$scope.id_filter = $scope.annotations
-        #$scope.annotations = []
         heatmap = annotator.plugins.Heatmap
         threads = []
         for bucket in heatmap.buckets
           for annotation in bucket
             thread = annotator.threading.getContainer annotation.id
+            #Cut out annotation branches which has no search results
+            children = thread.flattenChildren()
+            hit_in_children = false
+            if children?
+              for child in children
+                if child.id in $scope.search_filter
+                  hit_in_children = true
+                  break
+
+            unless annotation.id in $scope.search_filter or hit_in_children
+              continue
             if $routeParams.whole_document or annotation in $scope.annotations
               threads.push thread
         $scope.threads = threads

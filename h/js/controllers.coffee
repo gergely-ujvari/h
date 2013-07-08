@@ -391,13 +391,13 @@ class Viewer
       this.refresh $scope, $routeParams, annotator
       if listening
         console.log 'listening'
-        if $scope.detail
+        if $scope.detail or $scope.search
           console.log 'detail'
           plugins.Heatmap.unsubscribe 'updated', refresh
           listening = false
       else
         console.log 'not listening'
-        unless $scope.detail
+        unless $scope.detail or $scope.search
           console.log 'not detail'
           plugins.Heatmap.subscribe 'updated', refresh
           listening = true

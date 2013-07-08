@@ -56,12 +56,12 @@
       <!-- Thread view -->
       <div data-recursive="" class="paper thread">
         <!-- Annotation -->
-        <div ng-show="$parent.annotations.indexOf($parent.thread.message.id)!=-1 && !open">
+        <div ng-show="$parent.search_filter.indexOf($parent.thread.message.id)!=-1 && !open">
         <div class="detail annotation thread"
            name="annotation"
            ng-class="collapsed && 'collapsed' || ''"
            ng-model="$parent.thread.message"
-           ng-show="$parent.annotations.indexOf($parent.thread.message.id)!=-1 && !collapsed"
+           ng-show="$parent.search_filter.indexOf($parent.thread.message.id)!=-1 && !collapsed"
            />
         </div>
 

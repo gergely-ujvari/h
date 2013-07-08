@@ -117,7 +117,16 @@ class Hypothesis extends Annotator
           console.log 'query: ' + query
           #console.log searchCollection
           matched = []
-          annotations = @plugins.Store.annotations
+          whole_document = true
+          for searchItem in searchCollection.models
+            if searchItem.attributes.category is 'viewport' and
+            searchItem.attributes.value is 'bucket'
+              whole_document = false
+          if whole_document
+            annotations = @plugins.Store.annotations
+          else
+            annotations = $rootScope.annotations
+
           for annotation in annotations
             matches = true
             for searchItem in searchCollection.models
@@ -133,21 +142,54 @@ class Hypothesis extends Annotator
                   unless annotation.text.indexOf(value) > -1
                     matches = false
                     break
+                when 'time'
+                    delta = Math.round((+new Date - new Date(annotation.updated)) / 1000)
+                    switch value
+                      when '5 minutes'
+                        unless delta <= 60*5
+                          matches = false
+                      when '1 hour'
+                        unless delta <= 60*60
+                          matches = false
+                      when '1 day'
+                        unless delta <= 60*60*24
+                          matches = false
+                      when '1 week'
+                        unless delta <= 60*60*24*7
+                          matches = false
+                      when '1 month'
+                        unless delta <= 60*60*24*31
+                          matches = false
+                      when '1 year'
+                        unless delta <= 60*60*24*366
+                          matches = false
+                when 'group'
+                    priv_public = 'group:__world__' in (annotation.permissions.read or [])
+                    switch value
+                      when 'Public'
+                        unless priv_public
+                          matches = false
+                      when 'Private'
+                        if priv_public
+                          matches = false
+
             if matches
               matched.push annotation.id
 
+          $rootScope.search_filter = matched
           console.log matched
-          $location.search({'id' : null, 'mode' : 'search'})
-          @showViewer matched
+          $location.search({'id' : null, 'mode' : 'search', 'whole_document' : whole_document})
+          @showViewer annotations
           $rootScope.$digest()
 
         facetMatches: (callback) ->
-          callback ['user', 'group', 'tag', 'text','time']
+          callback ['user', 'group', 'tag', 'text','time','viewport']
         valueMatches: (facet, searchTerm, callback) ->
           switch facet
-            when 'group' then callback ['public', 'private']
-
-
+            when 'group' then callback ['Public', 'Private']
+            when 'viewport' then callback ['bucket', 'document']
+            when 'time'
+              callback ['5 minutes', '1 hour', '1 day', '1 week', '1 month', '1 year']
 
   _setupXDM: ->
     $location = @element.injector().get '$location'

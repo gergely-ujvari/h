@@ -457,7 +457,8 @@ class Viewer
         for bucket in heatmap.buckets
           for annotation in bucket
             thread = annotator.threading.getContainer annotation.id
-            threads.push thread
+            if $routeParams.whole_document or annotation in $scope.annotations
+              threads.push thread
         $scope.threads = threads
         console.log 'annotations ----------------------------------'
         console.log threads

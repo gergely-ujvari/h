@@ -739,6 +739,10 @@ blockquote {
     }
   }
 
+  .search-collapsed {
+    background-image: url("../images/plus_1.png");
+  }
+
   //These are all the changes needed to collapse thread objects.
   .collapsed {
     display: block !important;
@@ -1029,6 +1033,7 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
   float: none;
   overflow: hidden;
 }
+
 
 .visual_container {
   margin-left: 3em;

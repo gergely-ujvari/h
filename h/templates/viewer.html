@@ -56,13 +56,13 @@
       <!-- Thread view -->
       <div data-recursive="" class="paper thread">
         <!-- Annotation -->
-        <div ng-show="$parent.search_filter.indexOf($parent.thread.message.id)!=-1 && !open">
+        <div ng-init="open= $parent.search_filter.indexOf($parent.thread.message.id)!=-1"></div>
+        <div ng-show="open"
+             ng-animate="{hide: 'collapse-hide', show: 'collapse-show'}">
         <div class="detail annotation thread"
            name="annotation"
            ng-class="collapsed && 'collapsed' || ''"
-           ng-model="$parent.thread.message"
-           ng-show="$parent.search_filter.indexOf($parent.thread.message.id)!=-1 && !collapsed"
-           />
+           ng-model="$parent.thread.message"/>
         </div>
 
            <a href="" class="threadexp"
@@ -78,9 +78,6 @@
             ng-class="collapsed && 'collapsed' || ''"
             ng-repeat="thread in thread.children | orderBy:sortThread:true"
             ng-transclude>
-            <a href="" class="threadexp"
-               title="{{collapsed && 'Expand' || 'Collapse'}}"
-               ng-click="collapsed = !collapsed" />
           </li>
         </ul>
       </div>

@@ -124,6 +124,7 @@ class Hypothesis extends Annotator
       query: ''
       callbacks:
         search: (query, searchCollection) =>
+          console.log 'search'
           matched = []
           whole_document = true
           for searchItem in searchCollection.models
@@ -184,8 +185,13 @@ class Hypothesis extends Annotator
             if matches
               matched.push annotation.id
 
-          $rootScope.search_filter = matched
-          $location.search({'id' : null, 'mode' : 'search', 'whole_document' : whole_document})
+          #$rootScope.search_filter = matched
+          $location.search(
+            'id' : null,
+            'mode' : 'search',
+            'whole_document' : whole_document
+            'matched' : matched
+          )
           @showViewer annotations
           $rootScope.$digest()
 

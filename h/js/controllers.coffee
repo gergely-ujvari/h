@@ -430,6 +430,7 @@ class Viewer
     else
       if $routeParams.mode? and $routeParams.mode is 'search'
         delete $routeParams.mode
+        $scope.search_filter = $routeParams.matched
         $scope.thread = null
         heatmap = annotator.plugins.Heatmap
         threads = []

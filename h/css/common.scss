@@ -1016,6 +1016,11 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 //Visual Search////////////////////////////////
 //Imported their css here
 
+.collapsed-container {
+  height: 1em;
+  visibility: hidden;
+}
+
 .small-inner {
   margin:0px 0.5em 0px 1em;
 }
@@ -1025,7 +1030,6 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
   float: none;
   overflow: hidden;
 }
-
 
 .visual_container {
   margin-left: 3em;

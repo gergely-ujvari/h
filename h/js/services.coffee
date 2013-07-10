@@ -113,7 +113,6 @@ class Hypothesis extends Annotator
       query: ''
       callbacks:
         search: (query, searchCollection) =>
-          console.log 'search'
           matched = []
           whole_document = true
           for searchItem in searchCollection.models

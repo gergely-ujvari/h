@@ -247,6 +247,7 @@ class Annotation
           unless annotation.text? then annotation.text = ''
           annotator.updateAnnotation annotation
         else
+          if $scope.form.text.$viewValue is '' then annotation.text = ""
           annotator.updateAnnotation annotation
 
     $scope.reply = ->

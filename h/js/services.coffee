@@ -195,11 +195,11 @@ class Hypothesis extends Annotator
           $rootScope.$digest()
 
         facetMatches: (callback) ->
-          callback ['user', 'group', 'tag', 'text','time','viewport']
+          callback ['text','area', 'group', 'tag','time','user'], {preserveOrder: true}
         valueMatches: (facet, searchTerm, callback) ->
           switch facet
             when 'group' then callback ['Public', 'Private']
-            when 'viewport' then callback ['bucket', 'document']
+            when 'viewport' then callback ['sidebar', 'document']
             when 'time'
               callback ['5 minutes', '1 hour', '1 day', '1 week', '1 month', '1 year']
 

@@ -143,11 +143,11 @@ class Hypothesis extends Annotator
               switch category
                 when 'user'
                   userName = @user_filter annotation.user
-                  unless userName is value
+                  unless userName.toLowerCase() is value.toLowerCase()
                     matches = false
                     break
                 when 'text'
-                  unless annotation.text.indexOf(value) > -1
+                  unless annotation.text.toLowerCase().indexOf(value.toLowerCase()) > -1
                     matches = false
                     break
                 when 'time'

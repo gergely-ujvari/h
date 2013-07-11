@@ -127,8 +127,8 @@ class Hypothesis extends Annotator
           matched = []
           whole_document = true
           for searchItem in searchCollection.models
-            if searchItem.attributes.category is 'viewport' and
-            searchItem.attributes.value is 'bucket'
+            if searchItem.attributes.category is 'area' and
+            searchItem.attributes.value is 'sidebar'
               whole_document = false
           if whole_document
             annotations = @plugins.Store.annotations
@@ -199,7 +199,7 @@ class Hypothesis extends Annotator
         valueMatches: (facet, searchTerm, callback) ->
           switch facet
             when 'group' then callback ['Public', 'Private']
-            when 'viewport' then callback ['sidebar', 'document']
+            when 'area' then callback ['sidebar', 'document']
             when 'time'
               callback ['5 minutes', '1 hour', '1 day', '1 week', '1 month', '1 year']
 

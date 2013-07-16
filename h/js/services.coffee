@@ -185,13 +185,12 @@ class Hypothesis extends Annotator
               matched.push annotation.id
 
           #$rootScope.search_filter = matched
-          $location.search(
-            'id' : null,
-            'mode' : 'search',
-            'whole_document' : whole_document
-            'matched' : matched
-          )
-          @showViewer annotations
+
+          # Set the path
+          search =
+            whole_document : whole_document
+            matched : matched
+          $location.path('/page_search').search(search)
           $rootScope.$digest()
 
         facetMatches: (callback) ->

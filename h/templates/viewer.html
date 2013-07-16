@@ -1,9 +1,5 @@
 <ul class="sliding-panels">
   <li>
-
-  <!-- Summaries -->
-  <li ng-class="detail && 'squished' || ''"
-      ng-show="annotations&&!search">
     <ul>
       <li ng-class="detail && 'detail' || 'summary'"
           ng-click="toggleDetail($event)"
@@ -45,77 +41,4 @@
       </li>
     </ul>
   </li>
-
-  <!-- Details -->
-  <li ng-class="detail && thread.message && 'show' || ''"
-      ng-hide="search">
-    <!-- Excerpts -->
-    <div class="paper excerpt"
-         ng-repeat="target in thread.message.target">
-      <blockquote ng-bind="target.quote" ng-hide="diff" />
-      <blockquote ng-bind-html-unsafe="target.diffHTML" ng-show="diff" />
-      <div class="small pull-right" ng-show="target.diffHTML">
-        <input type="checkbox" ng-model="diff">Show differences</input>
-      </div>
-    </div>
-    <!-- Thread view -->
-    <div data-recursive="" class="paper thread">
-      <!-- Annotation -->
-      <div class="detail annotation"
-           name="annotation"
-           ng-model="$parent.thread.message" />
-      <!-- Replies -->
-      <ul >
-        <li class="thread"
-            ng-animate="{hide: 'collapse-hide', show: 'collapse-show'}"
-            ng-hide="collapsed"
-            ng-class="collapsed && 'collapsed' || ''"
-            ng-repeat="thread in thread.children | orderBy:sortThread:true"
-            ng-transclude>
-          <a href="" class="threadexp"
-             title="{{collapsed && 'Expand' || 'Collapse'}}"
-             ng-click="collapsed = !collapsed" />
-        </li>
-      </ul>
-    </div>
-  </li>
-
-  <!-- Search -->
-  <li ng-class="search && 'show' || ''"
-      ng-show="search">
-    <div ng-repeat="thread in threads"
-      class="summary">
-      <!-- Thread view -->
-      <div data-recursive="" class="paper thread">
-        <!-- Annotation -->
-        <div ng-init="open= $parent.search_filter.indexOf($parent.thread.message.id)!=-1"></div>
-        <div
-             ng-animate="{hide: 'collapse-hide', show: 'collapse-show'}"
-             ng-class="!open && 'collapsed-container' || ''">
-          <div class="detail annotation thread"
-               name="annotation"
-               ng-model="$parent.thread.message"/>
-        </div>
-
-        <a href=""
-           ng-class="!open && 'search-collapsed' || ''"
-           class="threadexp"
-           title="{{open && 'Expand' || 'Collapse'}}"
-           ng-click="open = !open"
-         />
-
-        <!-- Replies -->
-        <ul >
-          <li class="thread"
-            ng-animate="{hide: 'collapse-hide', show: 'collapse-show'}"
-            ng-hide="collapsed"
-            ng-class="collapsed && 'collapsed' || ''"
-            ng-repeat="thread in thread.children | orderBy:sortThread:true"
-            ng-transclude>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </li>
-
 </ul>

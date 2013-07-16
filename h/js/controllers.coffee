@@ -368,25 +368,6 @@ class Viewer
     annotator
   ) ->
     {provider, threading} = annotator
-    console.log 'ShowViewer start'
-
-    listening = false
-    refresh = =>
-      return unless $scope.frame.visible
-      this.refresh $scope, $routeParams, annotator
-      if listening
-        if $scope.detail or $scope.search
-          plugins.Heatmap.unsubscribe 'updated', refresh
-          listening = false
-      else
-        unless $scope.detail or $scope.search
-          plugins.Heatmap.subscribe 'updated', refresh
-          listening = true
-
-    $scope.showDetail = (annotation) ->
-      search = $location.search() or {}
-      search.id = annotation.id
-      $location.search(search).replace()
 
     $scope.focus = (annotation) ->
       if angular.isArray annotation
@@ -422,54 +403,42 @@ class Viewer
       else
         return new Date()
 
-    $scope.$on '$destroy', ->
-      if listening then plugins.Heatmap.unsubscribe 'updated', refresh
 
-    $scope.$on '$routeUpdate', refresh
+class Search
+  this.$inject = ['$location', '$routeParams', '$scope', 'annotator']
+  constructor: ($location, $routeParams, $scope, annotator) ->
+    console.log 'SearchController'
+
+    refresh = =>
+      $scope.search_filter = $routeParams.matched
+      $scope.thread = null
+      heatmap = annotator.plugins.Heatmap
+      threads = []
+      for bucket in heatmap.buckets
+        for annotation in bucket
+          thread = annotator.threading.getContainer annotation.id
+          #Cut out annotation branches which has no search results
+          children = thread.flattenChildren()
+          hit_in_children = false
+          if children?
+            for child in children
+              if child.id in $scope.search_filter
+                hit_in_children = true
+                break
+
+          unless annotation.id in $scope.search_filter or hit_in_children
+            continue
+          if $routeParams.whole_document or annotation in $scope.annotations
+            threads.push thread
+      $scope.threads = threads
+      #Replace this with threading call
 
     refresh()
 
-  refresh: ($scope, $routeParams, annotator) =>
-    if $routeParams.id? and annotator.threading.idTable[$routeParams.id]?
-      $scope.detail = true
-      $scope.search = false
-      $scope.thread = annotator.threading.getContainer $routeParams.id
-      $scope.focus $scope.thread.message?
-    else
-      if $routeParams.mode? and $routeParams.mode is 'search'
-        delete $routeParams.mode
-        $scope.search_filter = $routeParams.matched
-        $scope.thread = null
-        heatmap = annotator.plugins.Heatmap
-        threads = []
-        for bucket in heatmap.buckets
-          for annotation in bucket
-            thread = annotator.threading.getContainer annotation.id
-            #Cut out annotation branches which has no search results
-            children = thread.flattenChildren()
-            hit_in_children = false
-            if children?
-              for child in children
-                if child.id in $scope.search_filter
-                  hit_in_children = true
-                  break
-
-            unless annotation.id in $scope.search_filter or hit_in_children
-              continue
-            if $routeParams.whole_document or annotation in $scope.annotations
-              threads.push thread
-        $scope.threads = threads
-        #Replace this with threading call
-        $scope.detail = false
-        $scope.search = true
-      else
-        $scope.detail = false
-        $scope.search = false
-        $scope.thread = null
-        $scope.focus []
 
 angular.module('h.controllers', ['bootstrap'])
   .controller('AppController', App)
   .controller('AnnotationController', Annotation)
   .controller('EditorController', Editor)
   .controller('ViewerController', Viewer)
+  .controller('SearchController', Search)

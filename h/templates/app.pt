@@ -99,5 +99,8 @@
     <script type="text/ng-template" id="viewer.html">
       <metal:main use-macro="load: viewer.html" />
     </script>
+    <script type="text/ng-template" id="page_search.html">
+      <metal:main use-macro="load: page_search.html" />
+    </script>
   </body>
 </html>

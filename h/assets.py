@@ -119,8 +119,17 @@ angular_sanitize = Uglify(
 
 # jQuery
 jquery = Uglify('lib/jquery-1.8.3.js', output='lib/jquery-1.8.3.min.js')
+
 jquery_mousewheel = Uglify(
     'lib/jquery.mousewheel.js', output='lib/jquery.mousewheel.min.js'
+)
+
+jquery_ui = Bundle(
+    Uglify('h:lib/jquery.ui.widget.js', output='lib/jquery.ui.widget.min.js'),
+    Uglify('h:lib/jquery.ui.autocomplete.js', output='lib/jquery.ui.autocomplete.min.js'),
+    Uglify('h:lib/jquery.ui.core.js', output='lib/jquery.ui.core.min.js'),
+    Uglify('h:lib/jquery.ui.menu.js', output='lib/jquery.ui.menu.min.js'),
+    Uglify('h:lib/jquery.ui.position.js', output='lib/jquery.ui.position.min.js')
 )
 
 # Polyfills
@@ -140,6 +149,13 @@ pagedown = Uglify(
 )
 
 sockjs = Uglify('h:lib/sockjs-0.3.4.js', output='lib/sockjs-client.min.js')
+
+visualsearch = Bundle(
+    Uglify('h:lib/underscore-1.4.3.js', output='lib/underscore.min.js'),
+    Uglify('h:lib/backbone-0.9.10.js', output='lib/backbone.min.js'),
+    jquery_ui,
+    Uglify('h:lib/visualsearch.js', output='lib/visualsearch.min.js')
+)
 
 domTextFamily = Uglify(
     Coffee('lib/dom_text_mapper.coffee', output='js/dom_text_mapper.js'),
@@ -177,6 +193,7 @@ app = Bundle(
     pagedown,
     raf,
     sockjs,
+    visualsearch,
     Uglify(
         *[
             Coffee('js/%s.coffee' % name,

@@ -1174,7 +1174,8 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
   padding:6px 0;
   float:left;
   color:#808080;
-  font:13px/17px Helvetica,Arial
+  font:13px/17px Helvetica,Arial;
+  box-sizing: content-box;
 }
 
 .VS-search.VS-focus input{

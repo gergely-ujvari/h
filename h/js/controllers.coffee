@@ -433,6 +433,8 @@ class Search
       $scope.threads = threads
       #Replace this with threading call
 
+    $scope.$on '$routeUpdate', refresh
+
     refresh()
 
 

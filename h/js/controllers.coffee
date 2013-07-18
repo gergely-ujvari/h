@@ -435,6 +435,8 @@ class Search
                 child.text.toLowerCase().indexOf($routeParams.in_body_text) > -1
                   #Add highlight
                   child.highlightText = child.text.replace $scope.text_regexp, $scope.highlighter
+                else
+                  child.highlightText = child.text
           unless annotation.id in $scope.search_filter or hit_in_children
             continue
           if $routeParams.whole_document or annotation in $scope.annotations
@@ -442,6 +444,8 @@ class Search
             annotation.text.toLowerCase().indexOf($routeParams.in_body_text) > -1
               #Add highlight
               annotation.highlightText = annotation.text.replace $scope.text_regexp, $scope.highlighter
+            else
+              annotation.highlightText = annotation.text
             threads.push thread
       $scope.threads = threads
       #Replace this with threading call

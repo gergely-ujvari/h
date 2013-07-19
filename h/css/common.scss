@@ -1050,15 +1050,20 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
   overflow: hidden;
 }
 
+.visual_search {
+}
+
 .visual_container {
   margin-left: 3em;
 }
 
-.visual_search {
-}
-
 .magnify-glass {
   width: 2.25em;
+  min-height: 28px;
+}
+
+.magnify-glass .VS-icon {
+  margin-left: 3.5em;
 }
 
 .VS-search .VS-icon {
@@ -1085,6 +1090,12 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
   width:12px;
   height:12px;
   background-image:url(../images/search_glyph.png?1311104738)
+}
+
+.magnify-glass .VS-icon-search:hover {
+  width:12px;
+  height:12px;
+  background-image:url(../images/search_glyph_dark.png)
 }
 
 .VS-search div, .VS-search span, .VS-search a,.VS-search img,
@@ -1401,8 +1412,6 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
   list-style:none;
   width:auto
 }
-
-////////////datauri.css////////////////////
 
 .VS-search .VS-search-box.VS-focus{
   border-color:#acf;

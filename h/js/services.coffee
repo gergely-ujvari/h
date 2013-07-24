@@ -121,7 +121,7 @@ class Hypothesis extends Annotator
 
     @user_filter = $filter('userName')
     @visualSearch = VS.init
-      container: $('.visual_search')
+      container: $('.visual-search')
       query: ''
       callbacks:
         search: (query, searchCollection) =>

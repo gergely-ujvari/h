@@ -555,6 +555,8 @@ class App
               unless annotation.user is user
                 continue
 
+            console.log annotation.id
+            console.log(annotator.threading.getContainer(annotation.id))
             check = annotator.threading.getContainer annotation.id
             document.test = annotator
             console.log 'check'

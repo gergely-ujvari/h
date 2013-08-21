@@ -704,7 +704,7 @@ class Annotation
 
     $scope.$watch 'model.$modelValue.id', (id) ->
       console.log 'id change'
-      console.log model.$modelValue.id
+      console.log $scope.model.$modelValue.id
       console.log id
 
       if id?

@@ -556,9 +556,11 @@ class App
                 continue
 
             check = annotator.threading.getContainer annotation.id
+            document.test = annotator
             console.log 'check'
             console.log check
             if check?.message?
+              console.log 'check message'
               if action is 'create'
                 continue # We have created this
               if action is 'update'

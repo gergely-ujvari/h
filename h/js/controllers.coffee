@@ -703,6 +703,10 @@ class Annotation
     $scope.$watch 'editing', -> $scope.$emit 'toggleEditing'
 
     $scope.$watch 'model.$modelValue.id', (id) ->
+      console.log 'id change'
+      console.log model.$modelValue.id
+      console.log id
+
       if id?
         $scope.thread = threading.getContainer id
 

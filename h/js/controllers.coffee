@@ -541,6 +541,11 @@ class App
         data = msg.data[0]
         action = msg.data[1]
 
+        console.log 'action'
+        console.log action
+        console.log 'data'
+        console.log data
+
         p = $scope.auth.persona
         user = "acct:" + p.username + "@" + p.provider
         unless data instanceof Array then data = [data]
@@ -551,6 +556,9 @@ class App
                 continue
 
             check = annotator.threading.getContainer annotation.id
+            console.log 'check'
+            console.log check
+            
             if check?.message?
               if action is 'create'
                 continue # We have created this

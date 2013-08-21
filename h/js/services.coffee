@@ -315,9 +315,14 @@ class Hypothesis extends Annotator
     # if the annotation has a newly-assigned id and ensures that the id
     # is enumerable.
     store.updateAnnotation = (annotation, data) =>
+      console.log 'updateAnnotation'
+      console.log annotation
+      console.log data
       if annotation.id? and annotation.id != data.id
+        console.log 'updating'
         # Update the id table for the threading
         thread = @threading.getContainer annotation.id
+        console.log thread
         thread.id = data.id
         @threading.idTable[data.id] = thread
         delete @threading.idTable[annotation.id]

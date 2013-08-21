@@ -609,6 +609,8 @@ class Annotation
 
     $scope.save = ->
       annotation = $scope.model.$modelValue
+      console.log 'annotation id save'
+      console.log annotation.id
 
       # Forbid saving comments without a body (text or tags)
       if not annotation.highlights?.length and not annotation.text and

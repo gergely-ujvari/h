@@ -612,12 +612,13 @@ class App
                 continue # Probably our own delete or doesn't concern us
               else
                 if action is 'create'
+                  console.log 'create'
                   $timeout =>
                    check = annotator.threading.getContainer annotation.id
                    unless check?.message?
                      $scope.addUpdateNotification()
                      $scope.new_updates +=1
-                  , 1000
+                  , 2000
                 else
                   $scope.addUpdateNotification()
                   $scope.new_updates +=1

@@ -614,14 +614,15 @@ class App
                 if action is 'create'
                   console.log 'create'
                   $timeout =>
+                   console.log 'timeout start'
                    check = annotator.threading.getContainer annotation.id
                    console.log annotation.id
                    console.log check
-                    
+
                    unless check?.message?
                      $scope.addUpdateNotification()
                      $scope.new_updates +=1
-                  , 2000
+                  , 5000
                 else
                   $scope.addUpdateNotification()
                   $scope.new_updates +=1

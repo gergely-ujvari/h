@@ -328,9 +328,19 @@ class Hypothesis extends Annotator
       if annotation.id? and annotation.id != data.id
         # Update the id table for the threading
         thread = @threading.getContainer annotation.id
+
+        console.log 'old Thread'
+        console.log thread
+
         thread.id = data.id
         @threading.idTable[data.id] = thread
         delete @threading.idTable[annotation.id]
+
+        thread2 = @threading.getContainer data.id
+
+        console.log 'new Thread'
+        console.log thread2
+
 
         # The id is no longer temporary and should be serialized
         # on future Store requests.

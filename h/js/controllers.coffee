@@ -611,9 +611,17 @@ class App
               if action is 'delete'
                 continue # Probably our own delete or doesn't concern us
               else
-                $scope.addUpdateNotification()
-                $scope.new_updates +=1
-                break
+                if action is 'create'
+                  $timeout =>
+                   check = annotator.threading.getContainer annotation.id
+                   unless check?.message?
+                     $scope.addUpdateNotification()
+                     $scope.new_updates +=1
+                  , 1000
+                else
+                  $scope.addUpdateNotification()
+                  $scope.new_updates +=1
+                  break
 
     $timeout =>
       $scope.initUpdater()

@@ -615,6 +615,9 @@ class App
                   console.log 'create'
                   $timeout =>
                    check = annotator.threading.getContainer annotation.id
+                   console.log annotation.id
+                   console.log check
+                    
                    unless check?.message?
                      $scope.addUpdateNotification()
                      $scope.new_updates +=1

@@ -141,6 +141,11 @@ angular_tags_input:
   output: scripts/vendor/ng-tags-input.min.js
   contents:
     - h:static/scripts/vendor/ng-tags-input.js
+angular_ui_bootstrap:
+  filters: uglifyjs
+  output: scripts/vendor/ui-bootstrap-custom.min.js
+  contents:
+    - h:static/scripts/vendor/ui-bootstrap-custom.js
 
 
 # jQuery
@@ -232,6 +237,7 @@ app:
     - angular_route
     - angular_sanitize
     - angular_tags_input
+    - angular_ui_bootstrap
     - gettext
     - annotator
     - annotator_auth

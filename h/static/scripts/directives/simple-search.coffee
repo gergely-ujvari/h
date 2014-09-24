@@ -1,4 +1,7 @@
-simpleSearch = ['$parse', ($parse) ->
+imports = ['ui.bootstrap', 'h.services.indexer']
+
+
+simpleSearch = ['$parse', 'indexer',  ($parse, indexer) ->
   uuid = 0
   link: (scope, elem, attr, ctrl) ->
     scope.viewId = uuid++
@@ -19,6 +22,9 @@ simpleSearch = ['$parse', ($parse) ->
       else
         scope.onClear?()
 
+      scope.getHints = ->
+        indexer.getHints('any')
+
   restrict: 'C'
   scope:
     query: '='
@@ -26,7 +32,12 @@ simpleSearch = ['$parse', ($parse) ->
     onClear: '&'
   template: '''
             <form class="simple-search-form" ng-class="!searchtext && 'simple-search-inactive'" name="searchBox" ng-submit="search($event)">
-              <input id="simple-search-{{viewId}}" class="simple-search-input" type="text" ng-model="searchtext" name="searchText" placeholder="Search…" />
+              <input id="simple-search-{{viewId}}" class="simple-search-input" type="text"
+                     typeahead="hint for hint in getHints()"
+                     ng-model="searchtext"
+
+                     name="searchText"
+                     placeholder="Search…" />
               <label for="simple-search-{{viewId}}" class="simple-search-icon icon-search"></label>
               <button class="simple-search-clear" type="reset" ng-hide="!searchtext" ng-click="reset($event)">
                 <i class="icon-x"></i>
@@ -35,5 +46,4 @@ simpleSearch = ['$parse', ($parse) ->
             '''
 ]
 
-
-angular.module('h.directives').directive('simpleSearch', simpleSearch)
+angular.module('h.directives', imports).directive('simpleSearch', simpleSearch)

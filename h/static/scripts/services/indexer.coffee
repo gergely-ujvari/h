@@ -1,5 +1,4 @@
 imports = [
-  'bootstrap'
   'h.services'
 ]
 
@@ -63,10 +62,9 @@ class Indexer
     hints
 
   this.$inject = [
-    '$filter', '$scope', 'annotator'
+    '$filter', 'annotator'
   ]
-  constructor: ($filter, $scope, annotator) ->
-    username = $filter persona
+  constructor: ($filter, annotator) ->
     @fields =
       text: (e) -> [e.text]
       quote: (e) ->
@@ -75,7 +73,7 @@ class Indexer
             quotes.push target.quote if target.quote?
           quotes
       user: (e) =>
-          [username e.user]
+          [].push (e?.match /^acct:([^@]+)@(.+)/)?[1]
       tag: (e) ->
           e.tags
       any: (e) =>
@@ -89,6 +87,8 @@ class Indexer
 
 
     @createIndex = (annotations) =>
+      console.log '@indexes', @indexes
+
       for annotation in annotations
         for name, field of @fields
           @indexes[name].mappings[annotation.id] = []
@@ -131,10 +131,10 @@ class Indexer
     annotator.subscribe 'annotationDeleted', @deleteIndex
 
 
-    $scope.$on '$destroy', ->
-      annotator.unsubscribe 'annotationsLoaded', @createIndex
-      annotator.unsubscribe 'annotationUpdated', @updateIndex
-      annotator.unsubscribe 'annotationDeleted', @deleteIndex
+    #$scope.$on '$destroy', ->
+    #  annotator.unsubscribe 'annotationsLoaded', @createIndex
+    #  annotator.unsubscribe 'annotationUpdated', @updateIndex
+    #  annotator.unsubscribe 'annotationDeleted', @deleteIndex
 
 angular.module('h.services.indexer', imports)
 .service('indexer', Indexer)

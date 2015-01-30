@@ -22,6 +22,7 @@ from ws4py.exc import HandshakeError
 from ws4py.websocket import WebSocket as _WebSocket
 from ws4py.server.wsgiutils import WebSocketWSGIApplication
 
+from annotator import document
 from .api import get_user
 from .models import Annotation
 
@@ -473,6 +474,23 @@ class WebSocket(_WebSocket):
         data = json.dumps(packet)
         self.send(data)
 
+    def _patch_clauses(self, payload):
+        for clause in payload['clauses']:
+            if clause['field'] == '\uri':
+                self._get_document_equivalences(clause)
+
+    def _get_document_equivalences(self, clause):
+        uris = clause['value']
+        if not isinstance(uris, list):
+            uris = [uris]
+
+        available_uris = set(uris)
+        docs = document.Document.get_all_by_uris(uris)
+        for doc in docs:
+            available_uris.add(doc.uris())
+
+        clause['value'] = list(available_uris)
+
     def received_message(self, msg):
         transaction.begin()
         try:
@@ -485,6 +503,12 @@ class WebSocket(_WebSocket):
 
                 # Let's try to validate the schema
                 validate(payload, filter_schema)
+                self._patch_clauses(payload)
+
+                log.info('-----------------------')
+                log.info(payload)
+                log.info('-----------------------')
+
                 self.filter = FilterHandler(payload)
                 self.query = FilterToElasticFilter(payload, self.request)
                 self.offsetFrom = 0
